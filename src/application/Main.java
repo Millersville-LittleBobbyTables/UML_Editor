@@ -1,4 +1,4 @@
-package main;
+package application;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -32,5 +32,4 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();
 	}
-
 }
