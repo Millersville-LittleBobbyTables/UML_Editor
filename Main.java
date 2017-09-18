@@ -14,7 +14,9 @@ public class Main extends Application
     private BorderPane layout;
     private GridPane topGrid;
     private GridPane centerGrid;
+
     private int num_elements = 0;
+    private String currentConnector = "Association";
 
     public static void main( String[] args ) 
     {
@@ -53,16 +55,26 @@ public class Main extends Application
         ChoiceBox<String> connectorSelector = new ChoiceBox<>();
         connectorSelector.getItems().addAll("Dependency", "Association", 
             "Generalization", "Aggregation");
+
         connectorSelector.setValue("Association");
         GridPane.setConstraints( connectorSelector, 1, 0 );
 
+        connectorSelector.getSelectionModel().selectedItemProperty()
+            .addListener(( v, oldValue, newValue ) -> 
+        {
+            if ( oldValue != newValue )
+            {
+                currentConnector = newValue;
+            }
+        });
+        
         Button useConnectorButton = new Button("Use Connector");
-        GridPane.setConstraints( useConnectorButton, 2, 0 );
-        String currentConnector;
         useConnectorButton.setOnAction( e -> 
-            System.out.println( "Use the " + 
-            connectorSelector.getValue() + " Connector"));
-
+        {
+            System.out.println("Use the " + currentConnector + " Connector");
+        });
+        GridPane.setConstraints( useConnectorButton, 2, 0 );
+            
         topGrid.getChildren().addAll( addTextBoxButton, connectorSelector, 
             useConnectorButton );
         
