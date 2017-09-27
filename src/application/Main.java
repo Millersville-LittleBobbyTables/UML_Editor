@@ -1,3 +1,6 @@
+package application;
+
+import gui_tools.DraggableNode;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -6,6 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import uml_class.UMLLayout;
 import javafx.scene.input.DragEvent;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
@@ -120,183 +124,5 @@ public class Main extends Application
         primaryStage.setTitle("UML Editor");
         primaryStage.show();
     }
-
-    public class UMLLayout
-    {
-        private double width = 100;
-        private double height = 200;
-
-        private VBox textStack;
-        private TextArea top;
-        private TextArea mid;
-        private TextArea btm;
-
-        public UMLLayout( )
-        {
-            init();
-        }
-
-        public UMLLayout( double width, double height )
-        {
-            this.width = width;
-            this.height = height;
-            init();
-        }
-
-        private void init()
-        {
-            top = new TextArea();
-            top.setPrefWidth( width );
-            top.setPrefHeight( height / 9 );
-
-            mid = new TextArea();
-            mid.setPrefWidth( width );
-            mid.setPrefHeight( 4 * height / 9 );
-
-            btm = new TextArea();
-            btm.setPrefWidth( width );
-            btm.setPrefHeight( 4 * height / 9 );
-
-            textStack = new VBox();
-            textStack.getChildren().addAll( top, mid, btm );
-        }
-
-        public VBox getUMLBox()
-        {
-            return textStack;
-        }
-    }
-
-    /**
-     * Simple draggable node.
-     * 
-     * Dragging code based on {@link http://blog.ngopal.com.np/2011/06/09/draggable-node-in-javafx-2-0/}
-     * 
-     * @author Michael Hoffer <info@michaelhoffer.de>
-     */
-    public class DraggableNode extends Pane 
-    {
-        // node position
-        private double x = 0;
-        private double y = 0;
-        // mouse position
-        private double mousex = 0;
-        private double mousey = 0;
-        private Node view;
-        private boolean dragging = false;
-        private boolean moveToFront = true;
-
-        public DraggableNode() 
-        {
-            init();
-        }
-
-        public DraggableNode(Node view) 
-        {
-            this.view = view;
-
-            getChildren().add(view);
-            init();
-        }
-
-        private void init() 
-        {
-            onMousePressedProperty().set(new EventHandler<MouseEvent>() 
-            {
-                @Override
-                public void handle(MouseEvent event) 
-                {
-                    // record the current mouse X and Y position on Node
-                    mousex = event.getSceneX();
-                    mousey = event.getSceneY();
-
-                    x = getLayoutX();
-                    y = getLayoutY();
-
-                    if (isMoveToFront()) 
-                    {
-                        toFront();
-                    }
-                }
-            });
-
-            //Event Listener for MouseDragged
-            onMouseDraggedProperty().set(new EventHandler<MouseEvent>() 
-            {
-                @Override
-                public void handle(MouseEvent event) 
-                {
-                    // Get the exact moved X and Y
-                    double offsetX = event.getSceneX() - mousex;
-                    double offsetY = event.getSceneY() - mousey;
-
-                    x += offsetX;
-                    y += offsetY;
-
-                    double scaledX = x;
-                    double scaledY = y;
-
-                    setLayoutX(scaledX);
-                    setLayoutY(scaledY);
-
-                    dragging = true;
-
-                    // again set current Mouse x AND y position
-                    mousex = event.getSceneX();
-                    mousey = event.getSceneY();
-
-                    event.consume();
-                }
-            });
-
-            onMouseClickedProperty().set(new EventHandler<MouseEvent>() 
-            {
-                @Override
-                public void handle(MouseEvent event) 
-                {
-
-                    dragging = false;
-                }
-            });
-
-        }
-
-        /**
-         * @return the dragging
-         */
-        protected boolean isDragging() 
-        {
-            return dragging;
-        }
-
-
-        /**
-         * @return the view
-         */
-        public Node getView() 
-        {
-            return view;
-        }
-
-        /**
-         * @param moveToFront the moveToFront to set
-         */
-        public void setMoveToFront(boolean moveToFront) 
-        {
-            this.moveToFront = moveToFront;
-        }
-
-        /**
-         * @return the moveToFront
-         */
-        public boolean isMoveToFront() 
-        {
-            return moveToFront;
-        }
-        
-        public void removeNode(Node n) 
-        {
-            getChildren().remove(n);
-        }
-    }
+    
 }
