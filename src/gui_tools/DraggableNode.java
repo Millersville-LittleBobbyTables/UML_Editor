@@ -24,6 +24,9 @@ public class DraggableNode extends Pane
     private boolean dragging = false;
     private boolean moveToFront = true;
 
+    /*
+     * initializing the draggable box/node
+     */
     public DraggableNode() 
     {
         init();
@@ -37,6 +40,10 @@ public class DraggableNode extends Pane
         init();
     }
 
+    /*
+     * handles a user clicking a box (brings box to front)
+     * and dragging it to a different location in the window
+     */
     private void init() 
     {
         onMousePressedProperty().set(new EventHandler<MouseEvent>() 
