@@ -24,8 +24,8 @@ public class DraggableNode extends Pane
     private boolean dragging = false;
     private boolean moveToFront = true;
 
-    /*
-     * initializing the draggable box/node
+    /**
+     * initializing the draggable box/node object
      */
     public DraggableNode() 
     {
@@ -40,7 +40,7 @@ public class DraggableNode extends Pane
         init();
     }
 
-    /*
+    /**
      * handles a user clicking a box (brings box to front)
      * and dragging it to a different location in the window
      */

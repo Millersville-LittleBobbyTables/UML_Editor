@@ -33,6 +33,10 @@ public class Main extends Application
         launch(args);
     }
 
+    /**
+     * establishes the window and menu bar for the UML
+     * application
+     */
     @Override
     public void start(Stage primaryStage) throws Exception 
     {
