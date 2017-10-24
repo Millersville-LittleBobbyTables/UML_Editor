@@ -35,7 +35,7 @@ public class UMLLayout
     private Text currText = new Text();
 
     /**
-    * Constructs a UMLLayout with a pame and default x and y positions
+    * Constructs a UMLLayout with a pane and default x and y positions
     */
     public UMLLayout(Pane pane)
     {
@@ -44,7 +44,7 @@ public class UMLLayout
     }
 
     /**
-    * Constructs a UMLLayout with a pame and specified x and y positions
+    * Constructs a UMLLayout with a pane and specified x and y positions
     */
     public UMLLayout(Pane pane, double x, double y)
     {
@@ -85,7 +85,7 @@ public class UMLLayout
     }
 
     /**
-    * @return double y
+    * @return double x
     */
     public double getX()
     {
