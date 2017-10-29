@@ -11,6 +11,9 @@ bin/
 # Eclipse workspace files
 .metadata/
 
+# Eclipse JavaFX build file
+*.fxbuild
+
 # Log file
 *.log
 
