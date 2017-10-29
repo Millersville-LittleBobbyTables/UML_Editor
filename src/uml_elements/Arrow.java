@@ -15,7 +15,7 @@ import java.lang.Math;
 public class Arrow
 {
     private double triangleHeight = 25;
-    
+
     private double X_MIN = triangleHeight;
     private double Y_MIN = triangleHeight;
 
@@ -323,12 +323,15 @@ public class Arrow
             double translateY = newY - initY;
             initX = newX;
             initY = newY;
-            endX = clamp(endX + translateX, X_MIN - triangleHeight, 
-                X_MAX + triangleHeight);
-            endY = clamp(endY + translateY, Y_MIN - triangleHeight, 
-                Y_MAX + triangleHeight);
-            updateTriangle();
-            updatePosition();
+            newX = clamp(endX + translateX, X_MIN, X_MAX);
+            newY = clamp(endY + translateY, Y_MIN, Y_MAX);
+            if (newX != orgX || newY != orgY)
+            {
+                endX = newX;
+                endY = newY;
+                updateTriangle();
+                updatePosition();
+            }
             moveToFront();
         });
         moveToFront();
