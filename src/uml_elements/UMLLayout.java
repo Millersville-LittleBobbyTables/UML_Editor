@@ -257,6 +257,8 @@ public class UMLLayout
             width1 = maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
             updateWidths();
 
+            deleteButton.setLayoutX(x + getMaxWidth() - rectHeight);
+
             height1 = maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
             top.setPrefHeight(height1);
 
@@ -277,6 +279,8 @@ public class UMLLayout
             width2 = maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
             updateWidths();
 
+            deleteButton.setLayoutX(x + getMaxWidth() - rectHeight);
+
             height2 = maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
             mid.setPrefHeight(height2);
 
@@ -295,6 +299,8 @@ public class UMLLayout
 
             width3 = maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
             updateWidths();
+
+            deleteButton.setLayoutX(x + getMaxWidth() - rectHeight);
 
             height3 = maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
             btm.setPrefHeight(height3);

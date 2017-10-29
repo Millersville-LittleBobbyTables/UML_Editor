@@ -11,9 +11,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.Cursor;
-import javafx.scene.shape.StrokeType;
-import javafx.scene.shape.StrokeLineCap;
 
 import uml_elements.UMLLayout;
 import uml_elements.ArrowSelector;
