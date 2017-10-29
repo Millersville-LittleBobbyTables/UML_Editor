@@ -22,8 +22,9 @@ import uml_elements.Arrow;
 public class Main extends Application 
 {
     private String currentConnector = "Association";
-    private final static double window_width = 1200;
-    private final static double window_height = 900;
+    private double window_width = 1200;
+    private double window_height = 900;
+    private static final double menu_height = 50;
 
     public static void main(String[] args) 
     {
@@ -43,9 +44,9 @@ public class Main extends Application
         GridPane topGrid = new GridPane();
         Pane center = new Pane();
 
-        topGrid.setPadding( new Insets( 10, 10, 10, 10 ));
-        topGrid.setVgap( 8 );
-        topGrid.setHgap( 10 );
+        topGrid.setPadding( new Insets(10, 10, 10, 10));
+        topGrid.setVgap(8);
+        topGrid.setHgap(10);
         layout.setBackground(new Background(
             new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         layout.setTop( topGrid );
@@ -57,6 +58,9 @@ public class Main extends Application
             new UMLLayout(center);
         });
         GridPane.setConstraints( addTextBoxButton, 0, 0 );
+        addTextBoxButton.setPrefWidth(102);
+        addTextBoxButton.setPrefHeight(30);
+        topGrid.getChildren().add( addTextBoxButton );
 
         ChoiceBox<String> connectorSelector = new ChoiceBox<>();
         connectorSelector.getItems().addAll(ArrowSelector.ArrowType);
@@ -66,6 +70,7 @@ public class Main extends Application
         {
             if ( oldValue != newValue ) currentConnector = newValue;
         });
+        connectorSelector.setPrefHeight(30);
         GridPane.setConstraints( connectorSelector, 1, 0 );
         
         Button useConnectorButton = new Button("Use Connector");
@@ -75,10 +80,25 @@ public class Main extends Application
                 ArrowSelector.getIndex(currentConnector), scene);
             center.getChildren().addAll(arrow.getLine(), arrow.getTriangle());
         });
+        useConnectorButton.setPrefWidth(114);
+        useConnectorButton.setPrefHeight(30);
         GridPane.setConstraints( useConnectorButton, 2, 0 );
 
-        topGrid.getChildren().addAll( addTextBoxButton, connectorSelector, 
-            useConnectorButton );
+        scene.widthProperty().addListener(
+        (observableValue, oldSceneWidth, newSceneWidth)->
+        {
+            window_width = newSceneWidth.doubleValue();
+            System.out.println("Width: " + window_width);
+        });
+        
+        scene.heightProperty().addListener(
+        (observableValue, oldSceneHeight, newSceneHeight)->
+        {
+            window_height = newSceneHeight.doubleValue();
+            System.out.println("Height: " + window_height);
+        });
+
+        topGrid.getChildren().addAll( connectorSelector, useConnectorButton );
         primaryStage.setScene(scene);
         primaryStage.setTitle("UML Editor");
         primaryStage.show();
