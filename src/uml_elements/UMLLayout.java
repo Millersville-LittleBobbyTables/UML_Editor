@@ -1,20 +1,25 @@
-package uml_class;
+package uml_elements;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Button;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
+import javafx.geometry.Insets;
 
-/**
- * class responsible for the main layout of the UML diagram
- * including the textareas, top menu bar, etc. 
- */
 public class UMLLayout
 {
     private double x = 10;
     private double y = 10;
+
+    private double X_MIN = 0;
+    private double Y_MIN = 0;
+    private double X_MAX = 1200;
+    private double Y_MAX = 850;
 
     private double orgX;
     private double orgY;
@@ -34,6 +39,7 @@ public class UMLLayout
     private TextArea mid = new TextArea();
     private TextArea btm = new TextArea();
     private Rectangle cell;
+    private Button deleteButton;
     private Pane layout;
 
     private Text currText = new Text();
@@ -113,12 +119,25 @@ public class UMLLayout
         else            return d2;
     }
 
+    public double clamp(double x, double min, double max)
+    {
+        if ( x < min ) return min;
+        if ( x > max ) return max;
+        return x;
+    }
+
     /**
     * Adds elements to the layout
     */
     public void addToLayout()
     {
-        layout.getChildren().addAll(cell, top, mid, btm);
+        layout.getChildren().addAll(cell, deleteButton, top, mid, btm);
+    }
+
+    public void removeFromLayout()
+    {
+        layout.getChildren().removeAll(cell, deleteButton, top, mid, btm);
+        layout = null;
     }
 
     /**
@@ -130,6 +149,7 @@ public class UMLLayout
         top.toFront();
         mid.toFront();
         btm.toFront();
+        deleteButton.toFront();
     }
 
     /**
@@ -138,6 +158,7 @@ public class UMLLayout
     private void setXInLayout()
     {
         cell.setX(x);
+        deleteButton.setLayoutX(x + getMaxWidth() - rectHeight);
         top.setLayoutX(x);
         mid.setLayoutX(x);
         btm.setLayoutX(x);
@@ -149,6 +170,7 @@ public class UMLLayout
     private void setYInLayout()
     {
         cell.setY(y);
+        deleteButton.setLayoutY(y);
         top.setLayoutY(y + rectHeight);
         mid.setLayoutY(y + height1 + rectHeight);
         btm.setLayoutY(y + height2 + height1 + rectHeight);
@@ -163,6 +185,11 @@ public class UMLLayout
         top.setPrefWidth(getMaxWidth());
         mid.setPrefWidth(getMaxWidth());
         btm.setPrefWidth(getMaxWidth());
+    }
+
+    private double getMaxHeight()
+    {
+        return rectHeight + height1 + height2 + height3;
     }
 
     /**
@@ -185,41 +212,38 @@ public class UMLLayout
         mid.setFont(Font.font("Verdana", FontWeight.NORMAL, 12));
         btm.setFont(Font.font("Verdana", FontWeight.NORMAL, 12));
 
-        /**
-         * initializing the layout
-         */
-        public UMLLayout( )
         cell = new Rectangle(x,y,mWidth,rectHeight);
         cell.setOnMousePressed(e -> 
         {
-            orgX = e.getX();
-            orgY = e.getY();
-            if (orgX < 0) orgX = 0;
-            if (orgY < 0) orgY = 0;
+            orgX = clamp(e.getX(), X_MIN, X_MAX - getMaxWidth());
+            orgY = clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight());
             moveToFront();
         });
         cell.setOnMouseDragged(e -> 
         {
             double translateX = e.getX() - orgX;
             double translateY = e.getY() - orgY;
-            orgX = e.getX();
-            orgY = e.getY();
 
-            if (orgX < 0) orgX = 0;
-            if (orgY < 0) orgY = 0;
+            orgX = clamp(e.getX(), X_MIN, X_MAX - getMaxWidth());
+            orgY = clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight());
 
-        /**
-         * creating an initial height and width for the UML window 
-         */
-        public UMLLayout( double width, double height )
-            x += translateX;
-            y += translateY;
-
-            if (x < 0) x = 0;
-            if (y < 0) y = 0;
+            x = clamp(x + translateX, X_MIN, X_MAX - getMaxWidth());
+            y = clamp(y + translateY, Y_MIN, Y_MAX - getMaxHeight());
 
             setXInLayout();
             setYInLayout();
+        });
+
+        ImageView imageView = new ImageView(new Image("768px-Red_X.svg.png"));
+        imageView.setFitWidth(rectHeight - 5);
+        imageView.setFitHeight(rectHeight - 5);
+        deleteButton = new Button("", imageView);
+        deleteButton.setPadding(Insets.EMPTY);
+        deleteButton.setPrefHeight(rectHeight);
+        deleteButton.setPrefWidth(rectHeight);
+        deleteButton.setOnAction( e ->
+        {
+            removeFromLayout();
         });
 
         top.setMinWidth( mWidth );
@@ -239,24 +263,6 @@ public class UMLLayout
             mid.setLayoutY(y + rectHeight + height1);
             btm.setLayoutY(y + rectHeight + height1 + height2);
 
-        /**
-         * establishing the textareas on the left of the window
-         * these text areas should adjust height to text content 
-         * (no scroll bar)
-         */
-        private void init()
-        {
-            top = new TextArea();
-            top.setMinWidth( width );
-            top.setPrefHeight( height / 9 );
-
-            mid = new TextArea();
-            mid.setMinWidth( width );
-            mid.setPrefHeight( 4 * height / 9 );
-
-            btm = new TextArea();
-            btm.setMinWidth( width );
-            btm.setPrefHeight( 4 * height / 9 );
             moveToFront();
         });
 
@@ -279,11 +285,6 @@ public class UMLLayout
             moveToFront();
         });
 
-        /**
-         * gets the box for the UML
-         * @return the textStack of boxes
-         */
-        public VBox getUMLBox()
         btm.setMinWidth( mWidth );
         btm.setPrefWidth( width3 );
         btm.setMinHeight( mHeight );
