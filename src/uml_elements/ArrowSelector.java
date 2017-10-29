@@ -5,10 +5,10 @@ import uml_elements.Arrow;
 
 public class ArrowSelector
 {
-    public final String[] ArrowType = {"Association", "Dependency",
+    public static final String[] ArrowType = {"Association", "Dependency",
         "Generalization", "Realization"};
 
-    public int getIndex(String str)
+    public static int getIndex(String str)
     {
         for (int i = 0; i < ArrowType.length; ++i)
         {
@@ -17,7 +17,7 @@ public class ArrowSelector
         return 0;
     }
 
-    public Arrow getArrowSelected(int index, Scene scene)
+    public static Arrow getArrowSelected(int index, Scene scene)
     {
         if      (index == 0)    return new Arrow(scene, false, true, true);
         else if (index == 1)    return new Arrow(scene, true,  true, true);  

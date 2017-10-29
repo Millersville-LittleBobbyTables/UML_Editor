@@ -58,10 +58,8 @@ public class Main extends Application
         });
         GridPane.setConstraints( addTextBoxButton, 0, 0 );
 
-        ArrowSelector arrowSelector = new ArrowSelector();
-
         ChoiceBox<String> connectorSelector = new ChoiceBox<>();
-        connectorSelector.getItems().addAll(arrowSelector.ArrowType);
+        connectorSelector.getItems().addAll(ArrowSelector.ArrowType);
         connectorSelector.setValue( currentConnector );
         connectorSelector.getSelectionModel().selectedItemProperty()
             .addListener(( v, oldValue, newValue ) -> 
@@ -73,8 +71,8 @@ public class Main extends Application
         Button useConnectorButton = new Button("Use Connector");
         useConnectorButton.setOnAction( e -> 
         {
-            Arrow arrow = arrowSelector.getArrowSelected(
-                arrowSelector.getIndex(currentConnector), scene);
+            Arrow arrow = ArrowSelector.getArrowSelected(
+                ArrowSelector.getIndex(currentConnector), scene);
             center.getChildren().addAll(arrow.getLine(), arrow.getTriangle());
         });
         GridPane.setConstraints( useConnectorButton, 2, 0 );
