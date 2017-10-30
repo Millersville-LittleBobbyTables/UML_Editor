@@ -7,6 +7,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
@@ -84,6 +85,8 @@ public class Main extends Application
         useConnectorButton.setPrefHeight(30);
         GridPane.setConstraints( useConnectorButton, 2, 0 );
 
+        ToggleGroup editingModes = new ToggleGroup ();
+        
         ImageView textBoxModeImage = new ImageView(new Image ("AddTextBox.png"));
         textBoxModeImage.setFitWidth (32);
         textBoxModeImage.setFitHeight (32);
@@ -92,6 +95,17 @@ public class Main extends Application
         addTextBoxMode.setPrefHeight(32);
         GridPane.setConstraints(addTextBoxMode, 3, 0);
         topGrid.getChildren().add(addTextBoxMode);
+        editingModes.getToggles().add(addTextBoxMode);
+        
+        ImageView addArrowModeImage = new ImageView(new Image ("AddArrow.png"));
+        addArrowModeImage.setFitWidth (32);
+        addArrowModeImage.setFitHeight (32);
+        ToggleButton addArrowMode = new ToggleButton ("", addArrowModeImage);
+        addArrowMode.setPrefWidth(32);
+        addArrowMode.setPrefHeight(32);
+        GridPane.setConstraints(addArrowMode, 4, 0);
+        topGrid.getChildren().add(addArrowMode);
+        editingModes.getToggles().add(addArrowMode);
         
         center.setOnMouseClicked( e ->
         {
