@@ -229,7 +229,7 @@ public class Arrow
     }
 
     /**
-    * initilizes all objects with properly defined behavior
+    * initializes all objects with properly defined behavior
     */
     private void init()
     {

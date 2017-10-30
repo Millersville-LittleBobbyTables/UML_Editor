@@ -31,7 +31,7 @@ public class Main extends Application
     /**
     * Start is a method that is inherited from Application
     * that will be run after the initial window is setup, and
-    * functions as the psuedo main function for JavaFX applications
+    * functions as the pseudo main function for JavaFX applications
     */
     @Override
     public void start(Stage primaryStage) throws Exception 
@@ -41,7 +41,7 @@ public class Main extends Application
         GridPane topGrid = new GridPane();
         Pane center = new Pane();
 
-        topGrid.setPadding( new Insets(10, 10, 10, 10));
+        topGrid.setPadding( new Insets(10));
         topGrid.setVgap(8);
         topGrid.setHgap(10);
         layout.setBackground(new Background(
