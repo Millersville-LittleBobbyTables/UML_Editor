@@ -5,6 +5,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Button;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import utility.UMath;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.image.ImageView;
@@ -119,13 +120,6 @@ public class UMLLayout
         else            return d2;
     }
 
-    public double clamp(double x, double min, double max)
-    {
-        if ( x < min ) return min;
-        if ( x > max ) return max;
-        return x;
-    }
-
     /**
     * Adds elements to the layout
     */
@@ -215,8 +209,8 @@ public class UMLLayout
         cell = new Rectangle(x,y,mWidth,rectHeight);
         cell.setOnMousePressed(e -> 
         {
-            orgX = clamp(e.getX(), X_MIN, X_MAX - getMaxWidth());
-            orgY = clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight());
+            orgX = UMath.clamp(e.getX(), X_MIN, X_MAX - getMaxWidth());
+            orgY = UMath.clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight());
             moveToFront();
         });
         cell.setOnMouseDragged(e -> 
@@ -224,11 +218,11 @@ public class UMLLayout
             double translateX = e.getX() - orgX;
             double translateY = e.getY() - orgY;
 
-            orgX = clamp(e.getX(), X_MIN, X_MAX - getMaxWidth());
-            orgY = clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight());
+            orgX = UMath.clamp(e.getX(), X_MIN, X_MAX - getMaxWidth());
+            orgY = UMath.clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight());
 
-            x = clamp(x + translateX, X_MIN, X_MAX - getMaxWidth());
-            y = clamp(y + translateY, Y_MIN, Y_MAX - getMaxHeight());
+            x = UMath.clamp(x + translateX, X_MIN, X_MAX - getMaxWidth());
+            y = UMath.clamp(y + translateY, Y_MIN, Y_MAX - getMaxHeight());
 
             setXInLayout();
             setYInLayout();

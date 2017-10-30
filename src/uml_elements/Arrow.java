@@ -9,6 +9,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.Cursor;
 import javafx.scene.shape.StrokeType;
+import utility.UMath;
 import javafx.scene.shape.StrokeLineCap;
 import java.lang.Math;
 
@@ -144,15 +145,6 @@ public class Arrow
         line.toFront();
         triangle.toFront();
     }
-    /**
-    * @return double within min <= x <= max
-    */
-    public double clamp(double x, double min, double max)
-    {
-        if ( x < min ) return min;
-        if ( x > max ) return max;
-        return x;
-    }
 
     /**
     * @return length = sqrt( x^2 + y^2 )
@@ -178,6 +170,16 @@ public class Arrow
         return Math.abs(orgY - endY);
     }
 
+    public void setPosition (double orgX, double orgY, double endX, double endY)
+    {
+        this.orgX = orgX;
+        this.orgY = orgY;
+        this.endX = endX;
+        this.endY = endY;
+        updateTriangle ();
+        updatePosition ();
+    }
+    
     /**
     * updates line to proper positions
     */
@@ -229,7 +231,7 @@ public class Arrow
     }
 
     /**
-    * initilizes all objects with properly defined behavior
+    * initializes all objects with properly defined behavior
     */
     private void init()
     {
@@ -256,43 +258,43 @@ public class Arrow
 
         line.setOnMousePressed(e->
         {
-            initX = clamp(e.getX(), X_MIN, X_MAX);
-            initY = clamp(e.getY(), Y_MIN, Y_MAX);
+            initX = UMath.clamp(e.getX(), X_MIN, X_MAX);
+            initY = UMath.clamp(e.getY(), Y_MIN, Y_MAX);
             moveToFront();
         });
 
         line.setOnMouseDragged(e->
         {
-            double newX = clamp(e.getX(), X_MIN, X_MAX);
+            double newX = UMath.clamp(e.getX(), X_MIN, X_MAX);
             double translateX = newX - initX;
             initX = newX;
             double x = getXLength() + X_MIN;
             
             if ( orgX < endX )
             {
-                orgX = clamp(orgX + translateX, X_MIN, X_MAX - getXLength());
-                endX = clamp(endX + translateX, x, X_MAX);
+                orgX = UMath.clamp(orgX + translateX, X_MIN, X_MAX - getXLength());
+                endX = UMath.clamp(endX + translateX, x, X_MAX);
             }
             else
             {
-                endX = clamp(endX + translateX, X_MIN, X_MAX - getXLength());
-                orgX = clamp(orgX + translateX, x, X_MAX);
+                endX = UMath.clamp(endX + translateX, X_MIN, X_MAX - getXLength());
+                orgX = UMath.clamp(orgX + translateX, x, X_MAX);
             }
 
-            double newY = clamp(e.getY(), Y_MIN, Y_MAX);
+            double newY = UMath.clamp(e.getY(), Y_MIN, Y_MAX);
             double translateY = newY - initY;
             initY = newY;
             double y = getYLength() + Y_MIN;
 
             if ( orgY < endY )
             {
-                orgY = clamp(orgY + translateY, Y_MIN, Y_MAX - getYLength());
-                endY = clamp(endY + translateY, y, Y_MAX);
+                orgY = UMath.clamp(orgY + translateY, Y_MIN, Y_MAX - getYLength());
+                endY = UMath.clamp(endY + translateY, y, Y_MAX);
             }
             else
             {
-                endY = clamp(endY + translateY, Y_MIN, Y_MAX - getYLength());
-                orgY = clamp(orgY + translateY, y, Y_MAX);
+                endY = UMath.clamp(endY + translateY, Y_MIN, Y_MAX - getYLength());
+                orgY = UMath.clamp(orgY + translateY, y, Y_MAX);
             }
             updateTriangle();
             updatePosition();
@@ -310,21 +312,21 @@ public class Arrow
         
         triangle.setOnMousePressed(e->
         {
-            initX = clamp(e.getX(), X_MIN, X_MAX);
-            initY = clamp(e.getY(), Y_MIN, Y_MAX);
+            initX = UMath.clamp(e.getX(), X_MIN, X_MAX);
+            initY = UMath.clamp(e.getY(), Y_MIN, Y_MAX);
             moveToFront();
         });
 
         triangle.setOnMouseDragged(e->
         {
-            double newX = clamp(e.getX(), X_MIN, X_MAX);
-            double newY = clamp(e.getY(), Y_MIN, Y_MAX);
+            double newX = UMath.clamp(e.getX(), X_MIN, X_MAX);
+            double newY = UMath.clamp(e.getY(), Y_MIN, Y_MAX);
             double translateX = newX - initX;
             double translateY = newY - initY;
             initX = newX;
             initY = newY;
-            newX = clamp(endX + translateX, X_MIN, X_MAX);
-            newY = clamp(endY + translateY, Y_MIN, Y_MAX);
+            newX = UMath.clamp(endX + translateX, X_MIN, X_MAX);
+            newY = UMath.clamp(endY + translateY, Y_MIN, Y_MAX);
             if (newX != orgX || newY != orgY)
             {
                 endX = newX;
