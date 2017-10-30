@@ -1,0 +1,14 @@
+package utility;
+
+public class UMath {
+	
+    /**
+    * @return double within min <= x <= max
+    */
+    public static double clamp(double x, double min, double max)
+    {
+        if ( x < min ) return min;
+        if ( x > max ) return max;
+        return x;
+    }
+}

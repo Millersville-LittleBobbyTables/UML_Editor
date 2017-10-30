@@ -115,6 +115,13 @@ public class Main extends Application
         		uml.setPosition (e.getX(), e.getY());
         		e.consume();
         	}
+        	else if (addArrowMode.isSelected())
+        	{
+                Arrow arrow = ArrowSelector.getArrowSelected(
+                    ArrowSelector.getIndex(currentConnector), scene);
+                center.getChildren().addAll(arrow.getLine(), arrow.getTriangle());
+                arrow.setPosition(e.getX(), e.getY(), e.getX() + 50, e.getY());
+        	}
         });
         
         scene.widthProperty().addListener(
