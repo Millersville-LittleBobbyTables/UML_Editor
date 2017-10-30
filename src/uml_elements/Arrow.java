@@ -14,24 +14,24 @@ import java.lang.Math;
 
 public class Arrow
 {
-    private double orgX = 20;
-    private double orgY = 20;
-    private double endX = 70;
-    private double endY = 20;
-
     private double triangleHeight = 25;
+
+    private double X_MIN = triangleHeight;
+    private double Y_MIN = triangleHeight;
+
+    private double X_MAX = 1180;
+    private double Y_MAX = 830;
+
+    private double orgX = X_MIN;
+    private double orgY = Y_MIN;
+    private double endX = X_MIN + 50;
+    private double endY = Y_MIN;
 
     private double initX;
     private double initY;
 
     private double newOrgX;
     private double newOrgY;
-
-    private double X_MIN = 20;
-    private double Y_MIN = 20;
-
-    private double X_MAX = 1180;
-    private double Y_MAX = 830;
 
     private boolean isDash          = false;
     private boolean isNotClosed     = false;
@@ -234,7 +234,6 @@ public class Arrow
     private void init()
     {
         updateTriangle();
-        moveToFront();
         triangle.setFill(Color.TRANSPARENT);
         if (isNotClosed)
         {
@@ -297,6 +296,7 @@ public class Arrow
             }
             updateTriangle();
             updatePosition();
+            moveToFront();
         });
 
         triangle.setOnMouseEntered(e->
@@ -317,14 +317,23 @@ public class Arrow
 
         triangle.setOnMouseDragged(e->
         {
-            double translateX = e.getX() - initX;
-            double translateY = e.getY() - initY;
-            initX = e.getX();
-            initY = e.getY();
-            endX = clamp(endX + translateX, X_MIN, X_MAX);
-            endY = clamp(endY + translateY, Y_MIN, Y_MAX);
-            updateTriangle();
-            updatePosition();
+            double newX = clamp(e.getX(), X_MIN, X_MAX);
+            double newY = clamp(e.getY(), Y_MIN, Y_MAX);
+            double translateX = newX - initX;
+            double translateY = newY - initY;
+            initX = newX;
+            initY = newY;
+            newX = clamp(endX + translateX, X_MIN, X_MAX);
+            newY = clamp(endY + translateY, Y_MIN, Y_MAX);
+            if (newX != orgX || newY != orgY)
+            {
+                endX = newX;
+                endY = newY;
+                updateTriangle();
+                updatePosition();
+            }
+            moveToFront();
         });
+        moveToFront();
     }
 }
