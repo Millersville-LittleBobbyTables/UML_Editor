@@ -6,6 +6,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Background;
@@ -81,6 +84,25 @@ public class Main extends Application
         useConnectorButton.setPrefHeight(30);
         GridPane.setConstraints( useConnectorButton, 2, 0 );
 
+        ImageView textBoxModeImage = new ImageView(new Image ("AddTextBox.png"));
+        textBoxModeImage.setFitWidth (32);
+        textBoxModeImage.setFitHeight (32);
+        ToggleButton addTextBoxMode = new ToggleButton ("", textBoxModeImage);
+        addTextBoxMode.setPrefWidth(32);
+        addTextBoxMode.setPrefHeight(32);
+        GridPane.setConstraints(addTextBoxMode, 3, 0);
+        topGrid.getChildren().add(addTextBoxMode);
+        
+        center.setOnMouseClicked( e ->
+        {
+        	if (addTextBoxMode.isSelected())
+        	{
+        		UMLLayout uml = new UMLLayout(center);
+        		uml.setPosition (e.getX(), e.getY());
+        		e.consume();
+        	}
+        });
+        
         scene.widthProperty().addListener(
         (observableValue, oldSceneWidth, newSceneWidth)->
         {
