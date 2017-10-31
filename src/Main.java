@@ -1,4 +1,5 @@
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
@@ -70,6 +71,10 @@ public class Main extends Application
         mouseModeButton.setToggleGroup(editingModes);
         mouseModeButton.setTooltip(new Tooltip ("Mouse mode"));
         mouseModeButton.setSelected(true);
+        mouseModeButton.setOnMouseClicked(e ->
+        {
+        	mouseModeButton.setSelected(true);
+        });
         
         // Set up the 'add class mode' ToggleButton
         ImageView addClassModeImage = new ImageView(new Image ("AddClass.png"));
@@ -80,6 +85,10 @@ public class Main extends Application
         topGrid.getChildren().add(addClassModeButton);
         addClassModeButton.setToggleGroup(editingModes);
         addClassModeButton.setTooltip(new Tooltip ("Add class mode"));
+        addClassModeButton.setOnMouseClicked(e ->
+        {
+        	addClassModeButton.setSelected(true);
+        });
         
         // Set up the 'add arrow mode' ToggleButton
         ImageView addArrowModeImage = new ImageView(new Image ("AddArrow.png"));
@@ -90,7 +99,10 @@ public class Main extends Application
         topGrid.getChildren().add(addArrowModeButton);
         addArrowModeButton.setToggleGroup(editingModes);
         addArrowModeButton.setTooltip(new Tooltip ("Add arrow mode"));
-        
+        addArrowModeButton.setOnMouseClicked(e ->
+        {
+        	addArrowModeButton.setSelected(true);
+        });
         
         // Set up the connectorSelector ChoiceBox
         ChoiceBox<String> arrowTypeSelector = new ChoiceBox<>();
@@ -106,22 +118,17 @@ public class Main extends Application
         topGrid.getChildren().add(arrowTypeSelector);
         arrowTypeSelector.setTooltip(new Tooltip ("Arrow type"));
         
+        EventHandler<MouseEvent> consumeUnlessMouse = e ->
+        {
+        	if (!mouseModeButton.isSelected())
+        	{
+        		e.consume();
+        	}
+        };
         // Disallow deleting boxes unless in mouse mode
-        center.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> 
-        {
-        	if (!mouseModeButton.isSelected())
-        	{
-        		e.consume();
-        	}
-        });
+        center.addEventFilter(MouseEvent.MOUSE_PRESSED, consumeUnlessMouse);
         // Disallow dragging boxes and arrows allowed unless in mouse mode
-        center.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> 
-        {
-        	if (!mouseModeButton.isSelected())
-        	{
-        		e.consume();
-        	}
-        });
+        center.addEventFilter(MouseEvent.MOUSE_DRAGGED, consumeUnlessMouse);
         // Centers clicking logic will be based on the current mode we are in
         center.setOnMouseClicked( e ->
         {
