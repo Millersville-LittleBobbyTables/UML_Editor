@@ -11,4 +11,13 @@ public class UMath {
         if ( x > max ) return max;
         return x;
     }
+    
+    /**
+    * @return double max
+    */
+    public static double maxOfDoubles( double d1 , double d2 )
+    {
+        if ( d1 >= d2 ) return d1;
+        else            return d2;
+    }
 }

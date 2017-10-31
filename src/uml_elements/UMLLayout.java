@@ -112,15 +112,6 @@ public class UMLLayout
     }
 
     /**
-    * @return double max
-    */
-    public static double maxOfDoubles( double d1 , double d2 )
-    {
-        if ( d1 >= d2 ) return d1;
-        else            return d2;
-    }
-
-    /**
     * Adds elements to the layout
     */
     public void addToLayout()
@@ -192,7 +183,7 @@ public class UMLLayout
     */
     private double getMaxWidth()
     {
-        return maxOfDoubles(width1, maxOfDoubles(width2, width3));
+        return UMath.maxOfDoubles(width1, UMath.maxOfDoubles(width2, width3));
     }
 
     /**
@@ -248,12 +239,12 @@ public class UMLLayout
         {
             currText.setText(top.getText());
 
-            width1 = maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
+            width1 = UMath.maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
             updateWidths();
 
             deleteButton.setLayoutX(x + getMaxWidth() - rectHeight);
 
-            height1 = maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
+            height1 = UMath.maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
             top.setPrefHeight(height1);
 
             mid.setLayoutY(y + rectHeight + height1);
@@ -270,12 +261,12 @@ public class UMLLayout
         {
             currText.setText(mid.getText());
 
-            width2 = maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
+            width2 = UMath.maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
             updateWidths();
 
             deleteButton.setLayoutX(x + getMaxWidth() - rectHeight);
 
-            height2 = maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
+            height2 = UMath.maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
             mid.setPrefHeight(height2);
 
             btm.setLayoutY(y + rectHeight + height1 + height2);
@@ -291,12 +282,12 @@ public class UMLLayout
         {
             currText.setText(btm.getText());
 
-            width3 = maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
+            width3 = UMath.maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
             updateWidths();
 
             deleteButton.setLayoutX(x + getMaxWidth() - rectHeight);
 
-            height3 = maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
+            height3 = UMath.maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
             btm.setPrefHeight(height3);
 
             moveToFront();
