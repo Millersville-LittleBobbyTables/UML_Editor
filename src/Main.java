@@ -22,10 +22,10 @@ import uml_elements.Arrow;
 
 public class Main extends Application 
 {
-    private String currentConnector = "Association";
+    private String currentConnector = ArrowSelector.ArrowType[0];
     private double window_width = 1200;
     private double window_height = 900;
-    private static final double menu_height = 50;
+    private static final double menu_height = 52;
 
     public static void main(String[] args) 
     {
@@ -65,7 +65,7 @@ public class Main extends Application
 
         ChoiceBox<String> connectorSelector = new ChoiceBox<>();
         connectorSelector.getItems().addAll(ArrowSelector.ArrowType);
-        connectorSelector.setValue( currentConnector );
+        connectorSelector.setValue( ArrowSelector.ArrowType[0] );
         connectorSelector.getSelectionModel().selectedItemProperty()
             .addListener(( v, oldValue, newValue ) -> 
         {

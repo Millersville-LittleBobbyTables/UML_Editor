@@ -1,4 +1,4 @@
 /**
- * Package containing useful utility functions and classes
+ * Package containing useful utility functions and classes.
  */
 package utility;
