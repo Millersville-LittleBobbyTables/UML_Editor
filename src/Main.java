@@ -106,7 +106,7 @@ public class Main extends Application
         topGrid.getChildren().add(arrowTypeSelector);
         arrowTypeSelector.setTooltip(new Tooltip ("Arrow type"));
         
-        // Centers clicking logic will be based on the current mode we are in
+        // Disallow deleting boxes unless in mouse mode
         center.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> 
         {
         	if (!mouseModeButton.isSelected())
@@ -114,6 +114,7 @@ public class Main extends Application
         		e.consume();
         	}
         });
+        // Disallow dragging boxes and arrows allowed unless in mouse mode
         center.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> 
         {
         	if (!mouseModeButton.isSelected())
@@ -121,6 +122,7 @@ public class Main extends Application
         		e.consume();
         	}
         });
+        // Centers clicking logic will be based on the current mode we are in
         center.setOnMouseClicked( e ->
         {
         	if (addClassModeButton.isSelected())
