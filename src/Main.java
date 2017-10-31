@@ -23,9 +23,6 @@ import uml_elements.Arrow;
 
 public class Main extends Application 
 {
-	public static enum EditMode { MOUSE, ADD_CLASS, ADD_ARROW };
-	
-	private EditMode mode = EditMode.MOUSE;
 	
     private String currentConnector = ArrowSelector.ArrowType[0];
     private double window_width = 1200;
@@ -64,6 +61,15 @@ public class Main extends Application
         ToggleGroup editingModes = new ToggleGroup ();
         
         // Set up the 'mouse mode' ToggleButton
+        ImageView mouseModeImage = new ImageView(new Image ("mouse.png"));
+        mouseModeImage.setFitWidth(32);
+        mouseModeImage.setFitHeight(32);
+        ToggleButton mouseModeButton = new ToggleButton("", mouseModeImage);
+        GridPane.setConstraints(mouseModeButton, 0, 0);
+        topGrid.getChildren().add(mouseModeButton);
+        mouseModeButton.setToggleGroup(editingModes);
+        mouseModeButton.setTooltip(new Tooltip ("Mouse mode"));
+        mouseModeButton.setSelected(true);
         
         // Set up the 'add class mode' ToggleButton
         ImageView addClassModeImage = new ImageView(new Image ("AddClass.png"));
@@ -85,6 +91,7 @@ public class Main extends Application
         addArrowModeButton.setToggleGroup(editingModes);
         addArrowModeButton.setTooltip(new Tooltip ("Add arrow mode"));
         
+        
         // Set up the connectorSelector ChoiceBox
         ChoiceBox<String> arrowTypeSelector = new ChoiceBox<>();
         arrowTypeSelector.getItems().addAll(ArrowSelector.ArrowType);
@@ -102,7 +109,17 @@ public class Main extends Application
         // Centers clicking logic will be based on the current mode we are in
         center.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> 
         {
-        	
+        	if (!mouseModeButton.isSelected())
+        	{
+        		e.consume();
+        	}
+        });
+        center.addEventFilter(MouseEvent.MOUSE_DRAGGED, e -> 
+        {
+        	if (!mouseModeButton.isSelected())
+        	{
+        		e.consume();
+        	}
         });
         center.setOnMouseClicked( e ->
         {
