@@ -26,6 +26,10 @@ import uml_elements.Arrow;
 
 public class Main extends Application 
 {
+    private final double X_MIN = 0;
+    private final double Y_MIN = 0;
+    private final double X_MAX = 1200;
+    private final double Y_MAX = 850;
 	
     private String currentConnector = ArrowSelector.ArrowType[0];
     private double window_width = 1200;
@@ -134,18 +138,22 @@ public class Main extends Application
         // Centers clicking logic will be based on the current mode we are in
         center.setOnMouseClicked( e ->
         {
-        	if (addClassModeButton.isSelected())
+        	if (e.getX() > X_MIN && e.getX() < X_MAX &&
+        		e.getY() > Y_MIN && e.getY() < Y_MAX)
         	{
-        		UMLLayout uml = new UMLLayout(center);
-        		uml.setPosition (e.getX(), e.getY());
-        		e.consume();
-        	}
-        	else if (addArrowModeButton.isSelected())
-        	{
-                Arrow arrow = ArrowSelector.getArrowSelected(
-                    ArrowSelector.getIndex(currentConnector), scene);
-                center.getChildren().addAll(arrow.getLine(), arrow.getTriangle());
-                arrow.setPosition(e.getX(), e.getY(), e.getX() + 50, e.getY());
+	        	if (addClassModeButton.isSelected())
+	        	{
+	        		UMLLayout uml = new UMLLayout(center);
+	        		uml.setPosition (e.getX(), e.getY());
+	        		e.consume();
+	        	}
+	        	else if (addArrowModeButton.isSelected())
+	        	{
+	                Arrow arrow = ArrowSelector.getArrowSelected(
+	                    ArrowSelector.getIndex(currentConnector), scene);
+	                center.getChildren().addAll(arrow.getLine(), arrow.getTriangle());
+	                arrow.setPosition(e.getX(), e.getY(), e.getX() + 50, e.getY());
+	        	}
         	}
         });
         /* Re-add this in when we have containers for our elements and
