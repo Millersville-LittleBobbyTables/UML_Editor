@@ -11,6 +11,8 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
@@ -144,6 +146,21 @@ public class Main extends Application
                     ArrowSelector.getIndex(currentConnector), scene);
                 center.getChildren().addAll(arrow.getLine(), arrow.getTriangle());
                 arrow.setPosition(e.getX(), e.getY(), e.getX() + 50, e.getY());
+        	}
+        });
+        scene.addEventHandler(KeyEvent.ANY, e ->
+        {
+        	if (e.getCode() == KeyCode.C)
+        	{
+        		addClassModeButton.setSelected(true);
+        	}
+        	else if (e.getCode() == KeyCode.A)
+        	{
+        		addArrowModeButton.setSelected(true);
+        	}
+        	else if (e.getCode() == KeyCode.M)
+        	{
+        		mouseModeButton.setSelected(true);
         	}
         });
         
