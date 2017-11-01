@@ -32,10 +32,10 @@ public class ArrowTest
 	public void testLineAfterCtor()
 	{
 		Line l = arrow.getLine();
-		assertTrue (l.getStartX() == 10);
-		assertTrue (l.getStartY() == 12);
-		assertTrue (l.getEndX() == 40);
-		assertTrue (l.getEndY() == 5);
+		assertTrue (l.getStartX() == 5);
+		assertTrue (l.getStartY() == 64);
+		assertTrue (l.getEndX() == 29);
+		assertTrue (l.getEndY() == 8);
 	}
 	
 	@Test
