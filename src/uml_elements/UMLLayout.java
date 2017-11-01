@@ -17,10 +17,10 @@ public class UMLLayout
     private double x = 10;
     private double y = 10;
 
-    private double X_MIN = 0;
-    private double Y_MIN = 0;
-    private double X_MAX = 1200;
-    private double Y_MAX = 850;
+    private final double X_MIN = 0;
+    private final double Y_MIN = 0;
+    private final double X_MAX = 1200;
+    private final double Y_MAX = 850;
 
     private double orgX;
     private double orgY;
@@ -204,10 +204,12 @@ public class UMLLayout
         btm.setFont(Font.font("Verdana", FontWeight.NORMAL, 12));
 
         cell = new Rectangle(x,y,rectWidth,rectHeight);
+        cell.setArcWidth(8);
+        cell.setArcHeight(8);
         cell.setOnMousePressed(e -> 
         {
-            orgX = UMath.clamp(e.getX(), X_MIN, X_MAX - getMaxWidth());
-            orgY = UMath.clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight());
+            orgX = UMath.clamp(e.getX(), X_MIN, X_MAX - getMaxWidth() - (borderThickness * 2));
+            orgY = UMath.clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight() - (borderThickness * 2));
             moveToFront();
         });
         cell.setOnMouseDragged(e -> 
@@ -215,11 +217,11 @@ public class UMLLayout
             double translateX = e.getX() - orgX;
             double translateY = e.getY() - orgY;
 
-            orgX = UMath.clamp(e.getX(), X_MIN, X_MAX - getMaxWidth());
-            orgY = UMath.clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight());
+            orgX = UMath.clamp(e.getX(), X_MIN, X_MAX - getMaxWidth() - (borderThickness * 2));
+            orgY = UMath.clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight() - (borderThickness * 2));
 
-            x = UMath.clamp(x + translateX, X_MIN, X_MAX - getMaxWidth());
-            y = UMath.clamp(y + translateY, Y_MIN, Y_MAX - getMaxHeight());
+            x = UMath.clamp(x + translateX, X_MIN, X_MAX - getMaxWidth() - (borderThickness * 2));
+            y = UMath.clamp(y + translateY, Y_MIN, Y_MAX - getMaxHeight() - (borderThickness * 2));
 
             setXInLayout();
             setYInLayout();
