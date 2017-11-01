@@ -46,7 +46,7 @@ public class Arrow
     /**
     * Constructs an Arrow object with a scene to allow for cursor changes
     */
-    Arrow(Scene scene)
+    public Arrow(Scene scene)
     {
         this.scene = scene;
         init();
@@ -56,7 +56,7 @@ public class Arrow
     * Constructs an Arrow object with a scene to allow for cursor changes
     *   and a dash boolean to make the line itself dashed
     */
-    Arrow(Scene scene, boolean isDash)
+    public Arrow(Scene scene, boolean isDash)
     {
         this.scene = scene;
         this.isDash = isDash;
@@ -68,7 +68,7 @@ public class Arrow
     *   a isDash boolean to make the line itself dashed, and a isTriVisible
     *   boolean to make the triangle invisible or not
     */
-    Arrow(Scene scene, boolean isDash, boolean isTriVisible)
+    public Arrow(Scene scene, boolean isDash, boolean isTriVisible)
     {
         this.scene = scene;
         this.isDash = isDash;
@@ -82,7 +82,7 @@ public class Arrow
     *   boolean to make the triangle invisible or not, and a isNotClosed
     *   boolean to make the arrow open like this (--->).
     */
-    Arrow(Scene scene, boolean isDash, boolean isTriVisible, 
+    public Arrow(Scene scene, boolean isDash, boolean isTriVisible, 
         boolean isNotClosed)
     {
         this.scene = scene;
@@ -95,7 +95,7 @@ public class Arrow
     /**
     * Constructs an Arrow object with a scene and line coordinates
     */
-    Arrow(Scene scene, double orgX, double orgY, double endX, double endY)
+    public Arrow(Scene scene, double orgX, double orgY, double endX, double endY)
     {
         this.scene = scene;
         this.orgX = orgX;
@@ -109,7 +109,7 @@ public class Arrow
     * Constructs an Arrow object with a scene, line coordinates, and a
     * isDash boolean to make the line itself dashed
     */
-    Arrow(Scene scene, double orgX, double orgY, double endX, double endY, 
+    public Arrow(Scene scene, double orgX, double orgY, double endX, double endY, 
         boolean isDash)
     {
         this.scene = scene;
