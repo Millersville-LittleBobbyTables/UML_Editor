@@ -148,6 +148,8 @@ public class Main extends Application
                 arrow.setPosition(e.getX(), e.getY(), e.getX() + 50, e.getY());
         	}
         });
+        /* Re-add this in when we have containers for our elements and
+         * can have the text fields gain and lose focus with mouse clicks
         scene.addEventHandler(KeyEvent.ANY, e ->
         {
         	if (e.getCode() == KeyCode.C)
@@ -163,6 +165,7 @@ public class Main extends Application
         		mouseModeButton.setSelected(true);
         	}
         });
+        */
         
         scene.widthProperty().addListener(
         (observableValue, oldSceneWidth, newSceneWidth)->
@@ -179,7 +182,7 @@ public class Main extends Application
         });
 
         primaryStage.setScene(scene);
-        primaryStage.setTitle("UML Editor");
+        primaryStage.setTitle("Simple UML");
         primaryStage.show();
     }
 }
