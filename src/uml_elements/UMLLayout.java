@@ -17,15 +17,16 @@ public class UMLLayout
     private double x = 10;
     private double y = 10;
 
-    private double X_MIN = 0;
-    private double Y_MIN = 0;
-    private double X_MAX = 1200;
-    private double Y_MAX = 850;
+    private final double X_MIN = 0;
+    private final double Y_MIN = 0;
+    private final double X_MAX = 1200;
+    private final double Y_MAX = 850;
 
     private double orgX;
     private double orgY;
 
-    private final static double rectHeight = 15;
+    private final static double barHeight = 15;
+    private final static double borderThickness = 3;
     private final static double mWidth = 100;
     private double width1 = 100;
     private double width2 = 100;
@@ -35,6 +36,11 @@ public class UMLLayout
     private double height1 = 30;
     private double height2 = 30;
     private double height3 = 30;
+    
+    private double rectWidth = width1 + (borderThickness * 2);
+    private double rectHeight = barHeight + height1
+    		                  + height2 + height3
+    		                  + (borderThickness * 2);
 
     private TextArea top = new TextArea();
     private TextArea mid = new TextArea();
@@ -112,15 +118,6 @@ public class UMLLayout
     }
 
     /**
-    * @return double max
-    */
-    public static double maxOfDoubles( double d1 , double d2 )
-    {
-        if ( d1 >= d2 ) return d1;
-        else            return d2;
-    }
-
-    /**
     * Adds elements to the layout
     */
     public void addToLayout()
@@ -152,10 +149,10 @@ public class UMLLayout
     private void setXInLayout()
     {
         cell.setX(x);
-        deleteButton.setLayoutX(x + getMaxWidth() - rectHeight);
-        top.setLayoutX(x);
-        mid.setLayoutX(x);
-        btm.setLayoutX(x);
+        deleteButton.setLayoutX(x + getMaxWidth() + borderThickness - barHeight);
+        top.setLayoutX(x + borderThickness);
+        mid.setLayoutX(x + borderThickness);
+        btm.setLayoutX(x + borderThickness);
     }
 
     /**
@@ -164,10 +161,10 @@ public class UMLLayout
     private void setYInLayout()
     {
         cell.setY(y);
-        deleteButton.setLayoutY(y);
-        top.setLayoutY(y + rectHeight);
-        mid.setLayoutY(y + height1 + rectHeight);
-        btm.setLayoutY(y + height2 + height1 + rectHeight);
+        deleteButton.setLayoutY(y + (borderThickness / 2));
+        top.setLayoutY(y + barHeight + borderThickness);
+        mid.setLayoutY(y + height1 + barHeight + borderThickness);
+        btm.setLayoutY(y + height2 + height1 + barHeight + borderThickness);
     }
 
     /**
@@ -175,7 +172,7 @@ public class UMLLayout
     */
     private void updateWidths()
     {
-        cell.setWidth(getMaxWidth());
+        cell.setWidth(getMaxWidth() + (borderThickness * 2));
         top.setPrefWidth(getMaxWidth());
         mid.setPrefWidth(getMaxWidth());
         btm.setPrefWidth(getMaxWidth());
@@ -183,7 +180,7 @@ public class UMLLayout
 
     private double getMaxHeight()
     {
-        return rectHeight + height1 + height2 + height3;
+        return barHeight + height1 + height2 + height3;
     }
 
     /**
@@ -192,7 +189,7 @@ public class UMLLayout
     */
     private double getMaxWidth()
     {
-        return maxOfDoubles(width1, maxOfDoubles(width2, width3));
+        return UMath.maxOfDoubles(width1, UMath.maxOfDoubles(width2, width3));
     }
 
     /**
@@ -206,11 +203,13 @@ public class UMLLayout
         mid.setFont(Font.font("Verdana", FontWeight.NORMAL, 12));
         btm.setFont(Font.font("Verdana", FontWeight.NORMAL, 12));
 
-        cell = new Rectangle(x,y,mWidth,rectHeight);
+        cell = new Rectangle(x,y,rectWidth,rectHeight);
+        cell.setArcWidth(8);
+        cell.setArcHeight(8);
         cell.setOnMousePressed(e -> 
         {
-            orgX = UMath.clamp(e.getX(), X_MIN, X_MAX - getMaxWidth());
-            orgY = UMath.clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight());
+            orgX = UMath.clamp(e.getX(), X_MIN, X_MAX - getMaxWidth() - (borderThickness * 2));
+            orgY = UMath.clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight() - (borderThickness * 2));
             moveToFront();
         });
         cell.setOnMouseDragged(e -> 
@@ -218,23 +217,23 @@ public class UMLLayout
             double translateX = e.getX() - orgX;
             double translateY = e.getY() - orgY;
 
-            orgX = UMath.clamp(e.getX(), X_MIN, X_MAX - getMaxWidth());
-            orgY = UMath.clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight());
+            orgX = UMath.clamp(e.getX(), X_MIN, X_MAX - getMaxWidth() - (borderThickness * 2));
+            orgY = UMath.clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight() - (borderThickness * 2));
 
-            x = UMath.clamp(x + translateX, X_MIN, X_MAX - getMaxWidth());
-            y = UMath.clamp(y + translateY, Y_MIN, Y_MAX - getMaxHeight());
+            x = UMath.clamp(x + translateX, X_MIN, X_MAX - getMaxWidth() - (borderThickness * 2));
+            y = UMath.clamp(y + translateY, Y_MIN, Y_MAX - getMaxHeight() - (borderThickness * 2));
 
             setXInLayout();
             setYInLayout();
         });
 
         ImageView imageView = new ImageView(new Image("768px-Red_X.svg.png"));
-        imageView.setFitWidth(rectHeight - 5);
-        imageView.setFitHeight(rectHeight - 5);
+        imageView.setFitWidth(barHeight);
+        imageView.setFitHeight(barHeight);
         deleteButton = new Button("", imageView);
         deleteButton.setPadding(Insets.EMPTY);
-        deleteButton.setPrefHeight(rectHeight);
-        deleteButton.setPrefWidth(rectHeight);
+        deleteButton.setPrefHeight(barHeight);
+        deleteButton.setPrefWidth(barHeight);
         deleteButton.setOnAction( e ->
         {
             removeFromLayout();
@@ -248,16 +247,17 @@ public class UMLLayout
         {
             currText.setText(top.getText());
 
-            width1 = maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
+            width1 = UMath.maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
             updateWidths();
 
-            deleteButton.setLayoutX(x + getMaxWidth() - rectHeight);
+            deleteButton.setLayoutX(x + getMaxWidth() + borderThickness - barHeight);
 
-            height1 = maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
+            height1 = UMath.maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
             top.setPrefHeight(height1);
+            cell.setHeight(getMaxHeight() + (borderThickness * 2));
 
-            mid.setLayoutY(y + rectHeight + height1);
-            btm.setLayoutY(y + rectHeight + height1 + height2);
+            mid.setLayoutY(y + barHeight + height1 + borderThickness);
+            btm.setLayoutY(y + barHeight + height1 + height2 + borderThickness);
 
             moveToFront();
         });
@@ -270,15 +270,16 @@ public class UMLLayout
         {
             currText.setText(mid.getText());
 
-            width2 = maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
+            width2 = UMath.maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
             updateWidths();
 
-            deleteButton.setLayoutX(x + getMaxWidth() - rectHeight);
+            deleteButton.setLayoutX(x + getMaxWidth() + borderThickness - barHeight);
 
-            height2 = maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
+            height2 = UMath.maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
             mid.setPrefHeight(height2);
+            cell.setHeight(getMaxHeight() + (borderThickness * 2));
 
-            btm.setLayoutY(y + rectHeight + height1 + height2);
+            btm.setLayoutY(y + barHeight + height1 + height2 + borderThickness);
 
             moveToFront();
         });
@@ -291,13 +292,14 @@ public class UMLLayout
         {
             currText.setText(btm.getText());
 
-            width3 = maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
+            width3 = UMath.maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
             updateWidths();
 
-            deleteButton.setLayoutX(x + getMaxWidth() - rectHeight);
+            deleteButton.setLayoutX(x + getMaxWidth() + borderThickness - barHeight);
 
-            height3 = maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
+            height3 = UMath.maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
             btm.setPrefHeight(height3);
+            cell.setHeight(getMaxHeight() + (borderThickness * 2));
 
             moveToFront();
         });

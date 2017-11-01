@@ -1,15 +1,19 @@
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Background;
@@ -22,10 +26,14 @@ import uml_elements.Arrow;
 
 public class Main extends Application 
 {
+    private final double X_MIN = 0;
+    private final double Y_MIN = 0;
+    private final double X_MAX = 1200;
+    private final double Y_MAX = 850;
+	
     private String currentConnector = ArrowSelector.ArrowType[0];
     private double window_width = 1200;
     private double window_height = 900;
-    private static final double menu_height = 52;
 
     public static void main(String[] args) 
     {
@@ -45,84 +53,127 @@ public class Main extends Application
         GridPane topGrid = new GridPane();
         Pane center = new Pane();
 
+        // Set up topGrid formatting
         topGrid.setPadding( new Insets(10));
-        topGrid.setVgap(8);
         topGrid.setHgap(10);
+        topGrid.setBackground(new Background (
+    		new BackgroundFill (Color.LIGHTGREY, CornerRadii.EMPTY, Insets.EMPTY)));
+        
+        // Set up layout
         layout.setBackground(new Background(
-            new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+    		new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
         layout.setTop( topGrid );
         layout.setCenter( center );
 
-        Button addTextBoxButton = new Button("Add Textbox");
-        addTextBoxButton.setOnAction( e ->
+        ToggleGroup editingModes = new ToggleGroup ();
+        
+        // Set up the 'mouse mode' ToggleButton
+        ImageView mouseModeImage = new ImageView(new Image ("mouse.png"));
+        mouseModeImage.setFitWidth(32);
+        mouseModeImage.setFitHeight(32);
+        ToggleButton mouseModeButton = new ToggleButton("", mouseModeImage);
+        GridPane.setConstraints(mouseModeButton, 0, 0);
+        topGrid.getChildren().add(mouseModeButton);
+        mouseModeButton.setToggleGroup(editingModes);
+        mouseModeButton.setTooltip(new Tooltip ("Mouse mode"));
+        mouseModeButton.setSelected(true);
+        mouseModeButton.setOnMouseClicked(e ->
         {
-            new UMLLayout(center);
+        	mouseModeButton.setSelected(true);
         });
-        GridPane.setConstraints( addTextBoxButton, 0, 0 );
-        addTextBoxButton.setPrefWidth(102);
-        addTextBoxButton.setPrefHeight(30);
-        topGrid.getChildren().add( addTextBoxButton );
-
-        ChoiceBox<String> connectorSelector = new ChoiceBox<>();
-        connectorSelector.getItems().addAll(ArrowSelector.ArrowType);
-        connectorSelector.setValue( ArrowSelector.ArrowType[0] );
-        connectorSelector.getSelectionModel().selectedItemProperty()
+        
+        // Set up the 'add class mode' ToggleButton
+        ImageView addClassModeImage = new ImageView(new Image ("AddClass.png"));
+        addClassModeImage.setFitWidth (32);
+        addClassModeImage.setFitHeight (32);
+        ToggleButton addClassModeButton = new ToggleButton ("", addClassModeImage);
+        GridPane.setConstraints(addClassModeButton, 1, 0);
+        topGrid.getChildren().add(addClassModeButton);
+        addClassModeButton.setToggleGroup(editingModes);
+        addClassModeButton.setTooltip(new Tooltip ("Add class mode"));
+        addClassModeButton.setOnMouseClicked(e ->
+        {
+        	addClassModeButton.setSelected(true);
+        });
+        
+        // Set up the 'add arrow mode' ToggleButton
+        ImageView addArrowModeImage = new ImageView(new Image ("AddArrow.png"));
+        addArrowModeImage.setFitWidth (32);
+        addArrowModeImage.setFitHeight (32);
+        ToggleButton addArrowModeButton = new ToggleButton ("", addArrowModeImage);
+        GridPane.setConstraints(addArrowModeButton, 2, 0);
+        topGrid.getChildren().add(addArrowModeButton);
+        addArrowModeButton.setToggleGroup(editingModes);
+        addArrowModeButton.setTooltip(new Tooltip ("Add arrow mode"));
+        addArrowModeButton.setOnMouseClicked(e ->
+        {
+        	addArrowModeButton.setSelected(true);
+        });
+        
+        // Set up the connectorSelector ChoiceBox
+        ChoiceBox<String> arrowTypeSelector = new ChoiceBox<>();
+        arrowTypeSelector.getItems().addAll(ArrowSelector.ArrowType);
+        arrowTypeSelector.setValue( ArrowSelector.ArrowType[0] );
+        arrowTypeSelector.getSelectionModel().selectedItemProperty()
             .addListener(( v, oldValue, newValue ) -> 
         {
             if ( oldValue != newValue ) currentConnector = newValue;
         });
-        connectorSelector.setPrefHeight(30);
-        GridPane.setConstraints( connectorSelector, 1, 0 );
+        arrowTypeSelector.setPrefHeight(30);
+        GridPane.setConstraints( arrowTypeSelector, 3, 0 );
+        topGrid.getChildren().add(arrowTypeSelector);
+        arrowTypeSelector.setTooltip(new Tooltip ("Arrow type"));
         
-        Button useConnectorButton = new Button("Use Connector");
-        useConnectorButton.setOnAction( e -> 
+        EventHandler<MouseEvent> consumeUnlessMouse = e ->
         {
-            Arrow arrow = ArrowSelector.getArrowSelected(
-                ArrowSelector.getIndex(currentConnector), scene);
-            center.getChildren().addAll(arrow.getLine(), arrow.getTriangle());
-        });
-        useConnectorButton.setPrefWidth(114);
-        useConnectorButton.setPrefHeight(30);
-        GridPane.setConstraints( useConnectorButton, 2, 0 );
-
-        ToggleGroup editingModes = new ToggleGroup ();
-        
-        ImageView textBoxModeImage = new ImageView(new Image ("AddTextBox.png"));
-        textBoxModeImage.setFitWidth (32);
-        textBoxModeImage.setFitHeight (32);
-        ToggleButton addTextBoxMode = new ToggleButton ("", textBoxModeImage);
-        addTextBoxMode.setPrefWidth(32);
-        addTextBoxMode.setPrefHeight(32);
-        GridPane.setConstraints(addTextBoxMode, 3, 0);
-        topGrid.getChildren().add(addTextBoxMode);
-        editingModes.getToggles().add(addTextBoxMode);
-        
-        ImageView addArrowModeImage = new ImageView(new Image ("AddArrow.png"));
-        addArrowModeImage.setFitWidth (32);
-        addArrowModeImage.setFitHeight (32);
-        ToggleButton addArrowMode = new ToggleButton ("", addArrowModeImage);
-        addArrowMode.setPrefWidth(32);
-        addArrowMode.setPrefHeight(32);
-        GridPane.setConstraints(addArrowMode, 4, 0);
-        topGrid.getChildren().add(addArrowMode);
-        editingModes.getToggles().add(addArrowMode);
-        
-        center.setOnMouseClicked( e ->
-        {
-        	if (addTextBoxMode.isSelected())
+        	if (!mouseModeButton.isSelected())
         	{
-        		UMLLayout uml = new UMLLayout(center);
-        		uml.setPosition (e.getX(), e.getY());
         		e.consume();
         	}
-        	else if (addArrowMode.isSelected())
+        };
+        // Disallow deleting boxes unless in mouse mode
+        center.addEventFilter(MouseEvent.MOUSE_PRESSED, consumeUnlessMouse);
+        // Disallow dragging boxes and arrows allowed unless in mouse mode
+        center.addEventFilter(MouseEvent.MOUSE_DRAGGED, consumeUnlessMouse);
+        // Centers clicking logic will be based on the current mode we are in
+        center.setOnMouseClicked( e ->
+        {
+        	if (e.getX() > X_MIN && e.getX() < X_MAX &&
+        		e.getY() > Y_MIN && e.getY() < Y_MAX)
         	{
-                Arrow arrow = ArrowSelector.getArrowSelected(
-                    ArrowSelector.getIndex(currentConnector), scene);
-                center.getChildren().addAll(arrow.getLine(), arrow.getTriangle());
-                arrow.setPosition(e.getX(), e.getY(), e.getX() + 50, e.getY());
+	        	if (addClassModeButton.isSelected())
+	        	{
+	        		UMLLayout uml = new UMLLayout(center);
+	        		uml.setPosition (e.getX(), e.getY());
+	        		e.consume();
+	        	}
+	        	else if (addArrowModeButton.isSelected())
+	        	{
+	                Arrow arrow = ArrowSelector.getArrowSelected(
+	                    ArrowSelector.getIndex(currentConnector), scene);
+	                center.getChildren().addAll(arrow.getLine(), arrow.getTriangle());
+	                arrow.setPosition(e.getX(), e.getY(), e.getX() + 50, e.getY());
+	        	}
         	}
         });
+        /* Re-add this in when we have containers for our elements and
+         * can have the text fields gain and lose focus with mouse clicks
+        scene.addEventHandler(KeyEvent.ANY, e ->
+        {
+        	if (e.getCode() == KeyCode.C)
+        	{
+        		addClassModeButton.setSelected(true);
+        	}
+        	else if (e.getCode() == KeyCode.A)
+        	{
+        		addArrowModeButton.setSelected(true);
+        	}
+        	else if (e.getCode() == KeyCode.M)
+        	{
+        		mouseModeButton.setSelected(true);
+        	}
+        });
+        */
         
         scene.widthProperty().addListener(
         (observableValue, oldSceneWidth, newSceneWidth)->
@@ -138,9 +189,8 @@ public class Main extends Application
             System.out.println("Height: " + window_height);
         });
 
-        topGrid.getChildren().addAll( connectorSelector, useConnectorButton );
         primaryStage.setScene(scene);
-        primaryStage.setTitle("UML Editor");
+        primaryStage.setTitle("Simple UML");
         primaryStage.show();
     }
 }
