@@ -1,11 +1,27 @@
+package application;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
@@ -14,10 +30,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.CornerRadii;
 
 import uml_elements.UMLLayout;
@@ -32,8 +51,8 @@ public class Main extends Application
     private final double Y_MAX = 850;
 	
     private String currentConnector = ArrowSelector.ArrowType[0];
-    private double window_width = 1200;
-    private double window_height = 900;
+    public static double window_width = 1200;
+    public static double window_height = 900;
 
     public static void main(String[] args) 
     {
@@ -50,30 +69,39 @@ public class Main extends Application
     {
         BorderPane layout = new BorderPane();
         Scene scene = new Scene( layout, window_width, window_height );
-        GridPane topGrid = new GridPane();
+        
+        HBox toolBar = new HBox();
+        // For if we decide on adding tabs
+        // TabPane tabBar = new TabPane ();
+        //VBox top = new VBox (menuBar, toolBar, tabBar);
+        VBox top = new VBox (menuBar, toolBar);
         Pane center = new Pane();
-
-        // Set up topGrid formatting
-        topGrid.setPadding( new Insets(10));
-        topGrid.setHgap(10);
-        topGrid.setBackground(new Background (
-    		new BackgroundFill (Color.LIGHTGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         
         // Set up layout
         layout.setBackground(new Background(
-    		new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-        layout.setTop( topGrid );
-        layout.setCenter( center );
-
+        		new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
+        layout.setTop(top);
+        layout.setCenter(center);
+        
+        Border botGreyBorder = new Border (new BorderStroke (
+        		Color.GREY, Color.GREY, Color.GREY, Color.GREY,
+        		BorderStrokeStyle.SOLID, BorderStrokeStyle.NONE, BorderStrokeStyle.SOLID,
+        		BorderStrokeStyle.NONE, CornerRadii.EMPTY, BorderStroke.THIN, Insets.EMPTY));
+        
+        // Set up toolBar formatting
+        toolBar.setPadding( new Insets(5));
+        toolBar.setSpacing(10);
+        toolBar.setBackground(new Background (
+    		new BackgroundFill (Color.LIGHTGREY, CornerRadii.EMPTY, Insets.EMPTY)));
+        toolBar.setBorder(botGreyBorder);
+        
         ToggleGroup editingModes = new ToggleGroup ();
         
         // Set up the 'mouse mode' ToggleButton
         ImageView mouseModeImage = new ImageView(new Image ("mouse.png"));
-        mouseModeImage.setFitWidth(32);
-        mouseModeImage.setFitHeight(32);
+        mouseModeImage.setFitWidth(20);
+        mouseModeImage.setFitHeight(20);
         ToggleButton mouseModeButton = new ToggleButton("", mouseModeImage);
-        GridPane.setConstraints(mouseModeButton, 0, 0);
-        topGrid.getChildren().add(mouseModeButton);
         mouseModeButton.setToggleGroup(editingModes);
         mouseModeButton.setTooltip(new Tooltip ("Mouse mode"));
         mouseModeButton.setSelected(true);
@@ -84,11 +112,9 @@ public class Main extends Application
         
         // Set up the 'add class mode' ToggleButton
         ImageView addClassModeImage = new ImageView(new Image ("AddClass.png"));
-        addClassModeImage.setFitWidth (32);
-        addClassModeImage.setFitHeight (32);
+        addClassModeImage.setFitWidth (20);
+        addClassModeImage.setFitHeight (20);
         ToggleButton addClassModeButton = new ToggleButton ("", addClassModeImage);
-        GridPane.setConstraints(addClassModeButton, 1, 0);
-        topGrid.getChildren().add(addClassModeButton);
         addClassModeButton.setToggleGroup(editingModes);
         addClassModeButton.setTooltip(new Tooltip ("Add class mode"));
         addClassModeButton.setOnMouseClicked(e ->
@@ -98,11 +124,9 @@ public class Main extends Application
         
         // Set up the 'add arrow mode' ToggleButton
         ImageView addArrowModeImage = new ImageView(new Image ("AddArrow.png"));
-        addArrowModeImage.setFitWidth (32);
-        addArrowModeImage.setFitHeight (32);
+        addArrowModeImage.setFitWidth (22);
+        addArrowModeImage.setFitHeight (22);
         ToggleButton addArrowModeButton = new ToggleButton ("", addArrowModeImage);
-        GridPane.setConstraints(addArrowModeButton, 2, 0);
-        topGrid.getChildren().add(addArrowModeButton);
         addArrowModeButton.setToggleGroup(editingModes);
         addArrowModeButton.setTooltip(new Tooltip ("Add arrow mode"));
         addArrowModeButton.setOnMouseClicked(e ->
@@ -119,10 +143,11 @@ public class Main extends Application
         {
             if ( oldValue != newValue ) currentConnector = newValue;
         });
-        arrowTypeSelector.setPrefHeight(30);
-        GridPane.setConstraints( arrowTypeSelector, 3, 0 );
-        topGrid.getChildren().add(arrowTypeSelector);
+        arrowTypeSelector.setPrefHeight(20);
         arrowTypeSelector.setTooltip(new Tooltip ("Arrow type"));
+        
+        toolBar.getChildren().addAll(mouseModeButton, addClassModeButton,
+        		addArrowModeButton, arrowTypeSelector);
         
         EventHandler<MouseEvent> consumeUnlessMouse = e ->
         {
