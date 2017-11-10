@@ -12,7 +12,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class CanvasSizePopup {
+public class CanvasSizePopup
+{
 
 	private Stage stage;
 	

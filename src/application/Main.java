@@ -1,28 +1,20 @@
 package application;
 
 import interface_elements.SumlMenuBar;
+import interface_elements.SumlToolBar;
+import interface_elements.SumlToolBar.EditMode;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.CornerRadii;
 
 import uml_elements.UMLLayout;
@@ -36,9 +28,11 @@ public class Main extends Application
     private final double X_MAX = 1200;
     private final double Y_MAX = 850;
 	
-    private String currentConnector = ArrowSelector.ArrowType[0];
     public static double window_width = 1200;
     public static double window_height = 900;
+    
+    public static SumlMenuBar menuBar;
+    public static SumlToolBar toolBar;
 
     public static void main(String[] args) 
     {
@@ -56,13 +50,13 @@ public class Main extends Application
         BorderPane layout = new BorderPane();
         Scene scene = new Scene( layout, window_width, window_height );
         
-        HBox toolBar = new HBox();
+        menuBar = new SumlMenuBar (primaryStage);
+        toolBar = new SumlToolBar ();
         // For if we decide on adding tabs
         // TabPane tabBar = new TabPane ();
         //VBox top = new VBox (menuBar, toolBar, tabBar);
         VBox top = new VBox ();
-        SumlMenuBar menuBar = new SumlMenuBar (primaryStage, top);
-        top.getChildren().add(toolBar);
+        top.getChildren().addAll(menuBar.getMenuBar(), toolBar.getToolBar());
         Pane center = new Pane();
         
         // Set up layout
@@ -70,76 +64,10 @@ public class Main extends Application
         		new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         layout.setTop(top);
         layout.setCenter(center);
-        
-        Border botGreyBorder = new Border (new BorderStroke (
-        		Color.GREY, Color.GREY, Color.GREY, Color.GREY,
-        		BorderStrokeStyle.SOLID, BorderStrokeStyle.NONE, BorderStrokeStyle.SOLID,
-        		BorderStrokeStyle.NONE, CornerRadii.EMPTY, BorderStroke.THIN, Insets.EMPTY));
-        
-        // Set up toolBar formatting
-        toolBar.setPadding( new Insets(5));
-        toolBar.setSpacing(10);
-        toolBar.setBackground(new Background (
-    		new BackgroundFill (Color.LIGHTGREY, CornerRadii.EMPTY, Insets.EMPTY)));
-        toolBar.setBorder(botGreyBorder);
-        
-        ToggleGroup editingModes = new ToggleGroup ();
-        
-        // Set up the 'mouse mode' ToggleButton
-        ImageView mouseModeImage = new ImageView(new Image ("mouse.png"));
-        mouseModeImage.setFitWidth(20);
-        mouseModeImage.setFitHeight(20);
-        ToggleButton mouseModeButton = new ToggleButton("", mouseModeImage);
-        mouseModeButton.setToggleGroup(editingModes);
-        mouseModeButton.setTooltip(new Tooltip ("Mouse mode"));
-        mouseModeButton.setSelected(true);
-        mouseModeButton.setOnMouseClicked(e ->
-        {
-        	mouseModeButton.setSelected(true);
-        });
-        
-        // Set up the 'add class mode' ToggleButton
-        ImageView addClassModeImage = new ImageView(new Image ("AddClass.png"));
-        addClassModeImage.setFitWidth (20);
-        addClassModeImage.setFitHeight (20);
-        ToggleButton addClassModeButton = new ToggleButton ("", addClassModeImage);
-        addClassModeButton.setToggleGroup(editingModes);
-        addClassModeButton.setTooltip(new Tooltip ("Add class mode"));
-        addClassModeButton.setOnMouseClicked(e ->
-        {
-        	addClassModeButton.setSelected(true);
-        });
-        
-        // Set up the 'add arrow mode' ToggleButton
-        ImageView addArrowModeImage = new ImageView(new Image ("AddArrow.png"));
-        addArrowModeImage.setFitWidth (22);
-        addArrowModeImage.setFitHeight (22);
-        ToggleButton addArrowModeButton = new ToggleButton ("", addArrowModeImage);
-        addArrowModeButton.setToggleGroup(editingModes);
-        addArrowModeButton.setTooltip(new Tooltip ("Add arrow mode"));
-        addArrowModeButton.setOnMouseClicked(e ->
-        {
-        	addArrowModeButton.setSelected(true);
-        });
-        
-        // Set up the connectorSelector ChoiceBox
-        ChoiceBox<String> arrowTypeSelector = new ChoiceBox<>();
-        arrowTypeSelector.getItems().addAll(ArrowSelector.ArrowType);
-        arrowTypeSelector.setValue( ArrowSelector.ArrowType[0] );
-        arrowTypeSelector.getSelectionModel().selectedItemProperty()
-            .addListener(( v, oldValue, newValue ) -> 
-        {
-            if ( oldValue != newValue ) currentConnector = newValue;
-        });
-        arrowTypeSelector.setPrefHeight(20);
-        arrowTypeSelector.setTooltip(new Tooltip ("Arrow type"));
-        
-        toolBar.getChildren().addAll(mouseModeButton, addClassModeButton,
-        		addArrowModeButton, arrowTypeSelector);
-        
+
         EventHandler<MouseEvent> consumeUnlessMouse = e ->
         {
-        	if (!mouseModeButton.isSelected())
+        	if (toolBar.currentEditMode () != EditMode.MOUSE)
         	{
         		e.consume();
         	}
@@ -154,16 +82,16 @@ public class Main extends Application
         	if (e.getX() > X_MIN && e.getX() < X_MAX &&
         		e.getY() > Y_MIN && e.getY() < Y_MAX)
         	{
-	        	if (addClassModeButton.isSelected())
+	        	if (toolBar.currentEditMode() == EditMode.ADD_CLASS)
 	        	{
 	        		UMLLayout uml = new UMLLayout(center);
 	        		uml.setPosition (e.getX(), e.getY());
 	        		e.consume();
 	        	}
-	        	else if (addArrowModeButton.isSelected())
+	        	else if (toolBar.currentEditMode() == EditMode.ADD_ARROW)
 	        	{
 	                Arrow arrow = ArrowSelector.getArrowSelected(
-	                    ArrowSelector.getIndex(currentConnector), scene);
+	                    ArrowSelector.getIndex(toolBar.currentConnector()), scene);
 	                center.getChildren().addAll(arrow.getLine(), arrow.getTriangle());
 	                arrow.setPosition(e.getX(), e.getY(), e.getX() + 50, e.getY());
 	        	}

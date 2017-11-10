@@ -7,14 +7,16 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public final class SumlMenuBar {
-
-	public SumlMenuBar(Stage owner, Pane parent) {
-		MenuBar menuBar = new MenuBar ();
+public final class SumlMenuBar
+{
+	private MenuBar menuBar;
+	
+	public SumlMenuBar(Stage owner)
+	{
+		menuBar = new MenuBar ();
 		
 		Menu fileMenu = new Menu ("File");
         Menu editMenu = new Menu ("Edit");
@@ -31,7 +33,11 @@ public final class SumlMenuBar {
         		new BackgroundFill (Color.SILVER, CornerRadii.EMPTY, Insets.EMPTY)));
         //menuBar.setBorder(botGreyBorder);
         menuBar.getMenus().addAll (fileMenu, editMenu);
-        parent.getChildren().add(menuBar);
+	}
+	
+	public MenuBar getMenuBar ()
+	{
+		return menuBar;
 	}
 
 }
