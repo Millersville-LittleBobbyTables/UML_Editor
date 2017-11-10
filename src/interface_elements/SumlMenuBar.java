@@ -27,6 +27,7 @@ public final class SumlMenuBar {
         changeCanvasSizeMenuItem.setOnAction(e ->
         {
         	CanvasSizePopup changeCanvasSizePopup = new CanvasSizePopup (owner);
+        	changeCanvasSizePopup.show ();
         });
         editMenu.getItems().add(changeCanvasSizeMenuItem);
         

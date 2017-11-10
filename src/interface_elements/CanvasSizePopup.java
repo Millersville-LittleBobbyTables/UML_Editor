@@ -1,5 +1,6 @@
 package interface_elements;
 
+import application.Main;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -15,32 +16,54 @@ public class CanvasSizePopup {
 
 	private Stage stage;
 	
-	private double popupWidth = 250, popupHeight = 120;
+	final private int textFieldWidth = 100;
 	
-	CanvasSizePopup (Stage owner)
+	public CanvasSizePopup (Stage owner)
 	{
 		stage = new Stage ();
 		GridPane pane = new GridPane ();
-		pane.setPadding(new Insets (15));
 		Scene scene = new Scene (pane);
 		
 		Text widthLabel = new Text ("Width:");
 		GridPane.setConstraints(widthLabel, 0, 0);
+		
 		TextField widthField = new TextField ();
-		widthField.setMaxWidth(100);
+		widthField.setMaxWidth(textFieldWidth);
+		widthField.setText(Double.toString(Main.window_width));
 		GridPane.setConstraints(widthField, 1, 0);
 		
 		Text heightLabel = new Text ("Height:");
 		GridPane.setConstraints(heightLabel, 2, 0);
-		TextField heightField = new TextField ();
-		heightField.setMaxWidth(100);
-		GridPane.setConstraints(heightField, 3, 0);
 		
-		//GridPane.setConstraints(child, columnIndex, rowIndex, columnspan, rowspan, halignment, valignment, hgrow, vgrow, margin);
+		TextField heightField = new TextField ();
+		heightField.setMaxWidth(textFieldWidth);
+		heightField.setText(Double.toString(Main.window_height));
+		GridPane.setConstraints(heightField, 3, 0);
 		
 		Button submit = new Button ("Submit");
 		GridPane.setConstraints(submit, 3, 1, 1, 1, HPos.RIGHT, VPos.CENTER);
+		submit.setOnAction(e ->
+		{
+			try
+		    {
+				Main.window_width = Double.valueOf(widthField.getText()).doubleValue();
+	    	} catch (NumberFormatException nfe)
+			{
+	           System.out.println ("Could not parse canvas width.");
+			}
+			try
+			{
+	           Main.window_height = Double.valueOf(heightField.getText()).doubleValue();
+			} catch (NumberFormatException nfe)
+			{
+	           System.out.println ("Could not parse canvas height.");
+			}
+			System.out.println("width: " + Main.window_width);
+			System.out.println("height: " + Main.window_height);
+			close ();
+		});
 		
+		pane.setPadding(new Insets (15));
 		pane.setHgap(20);
 		pane.setVgap(10);
 		pane.getChildren().addAll(widthLabel, widthField, heightLabel, heightField, submit);
@@ -50,7 +73,16 @@ public class CanvasSizePopup {
 		stage.initModality(Modality.WINDOW_MODAL);
 		stage.setTitle("Change Canvas Size");
 		stage.setResizable(false);
+	}
+	
+	public void show ()
+	{
 		stage.show ();
+	}
+	
+	public void close ()
+	{
+		stage.close();
 	}
 	
 }
