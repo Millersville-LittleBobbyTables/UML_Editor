@@ -1,5 +1,6 @@
 package application;
 
+import interface_elements.SumlMenuBar;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -74,7 +75,9 @@ public class Main extends Application
         // For if we decide on adding tabs
         // TabPane tabBar = new TabPane ();
         //VBox top = new VBox (menuBar, toolBar, tabBar);
-        VBox top = new VBox (menuBar, toolBar);
+        VBox top = new VBox ();
+        SumlMenuBar menuBar = new SumlMenuBar (primaryStage, top);
+        top.getChildren().add(toolBar);
         Pane center = new Pane();
         
         // Set up layout
