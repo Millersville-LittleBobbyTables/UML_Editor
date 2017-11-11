@@ -20,13 +20,13 @@ public final class SumlMenuBar
 		
 		Menu fileMenu = new Menu ("File");
         Menu editMenu = new Menu ("Edit");
-        MenuItem changeCanvasSizeMenuItem = new MenuItem ("Change Canvas Size");
-        changeCanvasSizeMenuItem.setOnAction(e ->
+        MenuItem changeWorkspaceSizeMenuItem = new MenuItem ("Change Canvas Size");
+        changeWorkspaceSizeMenuItem.setOnAction(e ->
         {
-        	CanvasSizePopup changeCanvasSizePopup = new CanvasSizePopup (owner);
-        	changeCanvasSizePopup.show ();
+        	WorkspaceSizePopup changeWorkspaceSizePopup = new WorkspaceSizePopup (owner);
+        	changeWorkspaceSizePopup.show ();
         });
-        editMenu.getItems().add(changeCanvasSizeMenuItem);
+        editMenu.getItems().add(changeWorkspaceSizeMenuItem);
         
         // Setting up menuBar formatting
         menuBar.setBackground(new Background (

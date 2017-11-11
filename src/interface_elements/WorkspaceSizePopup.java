@@ -12,14 +12,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class CanvasSizePopup
+public class WorkspaceSizePopup
 {
-
 	private Stage stage;
 	
 	final private int textFieldWidth = 100;
 	
-	public CanvasSizePopup (Stage owner)
+	public WorkspaceSizePopup (Stage owner)
 	{
 		stage = new Stage ();
 		GridPane pane = new GridPane ();
@@ -50,14 +49,14 @@ public class CanvasSizePopup
 				Main.window_width = Double.valueOf(widthField.getText()).doubleValue();
 	    	} catch (NumberFormatException nfe)
 			{
-	           System.out.println ("Could not parse canvas width.");
+	           System.out.println ("Could not parse workspace width.");
 			}
 			try
 			{
 	           Main.window_height = Double.valueOf(heightField.getText()).doubleValue();
 			} catch (NumberFormatException nfe)
 			{
-	           System.out.println ("Could not parse canvas height.");
+	           System.out.println ("Could not parse workspace height.");
 			}
 			System.out.println("width: " + Main.window_width);
 			System.out.println("height: " + Main.window_height);
@@ -72,7 +71,7 @@ public class CanvasSizePopup
 		stage.setScene(scene);
 		stage.initOwner(owner);
 		stage.initModality(Modality.WINDOW_MODAL);
-		stage.setTitle("Change Canvas Size");
+		stage.setTitle("Change Workspace Size");
 		stage.setResizable(false);
 	}
 	
