@@ -18,8 +18,6 @@ public class SumlWorkspace
 {
 	private Pane pane;
 	
-	private double width, height;
-	
 	public SumlWorkspace (double width, double height)
 	{
 		pane = new Pane ();
@@ -29,10 +27,7 @@ public class SumlWorkspace
 		pane.setMaxHeight(height);
 		pane.setBackground(new Background (
 				new BackgroundFill (Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
-		this.width = width;
-		this.height = height;
 		
-
         EventHandler<MouseEvent> consumeUnlessMouse = e ->
         {
         	if (Main.toolBar.currentEditMode () != EditMode.MOUSE)
@@ -64,6 +59,34 @@ public class SumlWorkspace
 	        	}
         	}
         });
+	}
+	
+	public void setSize (double width, double height)
+	{
+		pane.setMinSize(width, height);
+		pane.setMaxSize(width, height);
+	}
+	
+	public void setWidth (double width)
+	{
+		pane.setMinWidth(width);
+		pane.setMaxWidth(width);
+	}
+	
+	public void setHeight (double height)
+	{
+		pane.setMinHeight(height);
+		pane.setMaxHeight(height);
+	}
+	
+	public double getWidth ()
+	{
+		return pane.getWidth();
+	}
+	
+	public double getHeight ()
+	{
+		return pane.getHeight();
 	}
 	
 	public Pane getWorkspace ()

@@ -19,8 +19,6 @@ public class UMLLayout
 
     private final double X_MIN = 0;
     private final double Y_MIN = 0;
-    private double layoutWidth;
-    private double layoutHeight;
 
     private double orgX;
     private double orgY;
@@ -57,8 +55,6 @@ public class UMLLayout
     public UMLLayout(Pane pane)
     {
         layout = pane;
-        layoutWidth = layout.getWidth();
-        layoutHeight = layout.getHeight ();
         init();
     }
 
@@ -68,8 +64,6 @@ public class UMLLayout
     public UMLLayout(Pane pane, double x, double y)
     {
         layout = pane;
-        layoutWidth = layout.getWidth();
-        layoutHeight = layout.getHeight ();
         this.x = x;
         this.y = y;
         init();
@@ -101,6 +95,12 @@ public class UMLLayout
     	setX (x);
     	setY (y);
     }
+    
+    public void clampToBounds ()
+    {
+    	setX (x);
+    	setY (y);
+    }
 
     /**
     * @return double x
@@ -124,7 +124,7 @@ public class UMLLayout
      */
     public double getMaxX()
     {
-    	return layoutWidth - getMaxWidth() - (borderThickness * 2);
+    	return layout.getWidth() - getMaxWidth() - (borderThickness * 2);
     }
     
     /**
@@ -133,7 +133,7 @@ public class UMLLayout
      */
     public double getMaxY()
     {
-    	return layoutHeight - getMaxHeight() - (borderThickness * 2);
+    	return layout.getHeight() - getMaxHeight() - (borderThickness * 2);
     }
 
     /**
@@ -273,8 +273,7 @@ public class UMLLayout
             top.setPrefHeight(height1);
             cell.setHeight(getMaxHeight() + (borderThickness * 2));
 
-            setX(x);
-            setY(y);
+            clampToBounds ();
 
             moveToFront();
         });
@@ -294,8 +293,7 @@ public class UMLLayout
             mid.setPrefHeight(height2);
             cell.setHeight(getMaxHeight() + (borderThickness * 2));
 
-            setX(x);
-            setY(y);
+            clampToBounds ();
 
             moveToFront();
         });
@@ -315,14 +313,21 @@ public class UMLLayout
             btm.setPrefHeight(height3);
             cell.setHeight(getMaxHeight() + (borderThickness * 2));
             
-            setX(x);
-            setY(y);
+            clampToBounds ();
 
             moveToFront();
         });
+        
+        layout.widthProperty().addListener( (obs, oldValue, newValue) ->
+        {
+        	setX(x);
+        });
+        layout.heightProperty().addListener( (obs, oldValue, newValue) ->
+        {
+        	setY(y);
+        });
 
-        setX (x);
-        setY (y);
+        clampToBounds ();
         addToLayout();
     }
 }

@@ -1,5 +1,6 @@
 package interface_elements;
 
+import application.Main;
 import javafx.geometry.Insets;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -23,7 +24,7 @@ public final class SumlMenuBar
         MenuItem changeWorkspaceSizeMenuItem = new MenuItem ("Change Canvas Size");
         changeWorkspaceSizeMenuItem.setOnAction(e ->
         {
-        	WorkspaceSizePopup changeWorkspaceSizePopup = new WorkspaceSizePopup (owner);
+        	WorkspaceSizePopup changeWorkspaceSizePopup = new WorkspaceSizePopup (owner, Main.workspaces.get("untitled"));
         	changeWorkspaceSizePopup.show ();
         });
         editMenu.getItems().add(changeWorkspaceSizeMenuItem);

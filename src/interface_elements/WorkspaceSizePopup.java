@@ -1,6 +1,5 @@
 package interface_elements;
 
-import application.Main;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -19,7 +18,7 @@ public class WorkspaceSizePopup
 	
 	final private int textFieldWidth = 100;
 	
-	public WorkspaceSizePopup (Stage owner)
+	public WorkspaceSizePopup (Stage owner, SumlWorkspace workspace)
 	{
 		stage = new Stage ();
 		GridPane pane = new GridPane ();
@@ -30,7 +29,7 @@ public class WorkspaceSizePopup
 		
 		TextField widthField = new TextField ();
 		widthField.setMaxWidth(textFieldWidth);
-		widthField.setText(Double.toString(Main.window_width));
+		widthField.setText(Double.toString(workspace.getWidth()));
 		GridPane.setConstraints(widthField, 1, 0);
 		
 		Text heightLabel = new Text ("Height:");
@@ -38,29 +37,30 @@ public class WorkspaceSizePopup
 		
 		TextField heightField = new TextField ();
 		heightField.setMaxWidth(textFieldWidth);
-		heightField.setText(Double.toString(Main.window_height));
+		heightField.setText(Double.toString(workspace.getHeight()));
 		GridPane.setConstraints(heightField, 3, 0);
 		
 		Button submit = new Button ("Submit");
 		GridPane.setConstraints(submit, 3, 1, 1, 1, HPos.RIGHT, VPos.CENTER);
 		submit.setOnAction(e ->
 		{
+			double width = workspace.getWidth();
+			double height = workspace.getHeight();
 			try
 		    {
-				Main.window_width = Double.valueOf(widthField.getText()).doubleValue();
+				width = Double.valueOf(widthField.getText()).doubleValue();
 	    	} catch (NumberFormatException nfe)
 			{
 	           System.out.println ("Could not parse workspace width.");
 			}
 			try
 			{
-	           Main.window_height = Double.valueOf(heightField.getText()).doubleValue();
+				height = Double.valueOf(heightField.getText()).doubleValue();
 			} catch (NumberFormatException nfe)
 			{
 	           System.out.println ("Could not parse workspace height.");
 			}
-			System.out.println("width: " + Main.window_width);
-			System.out.println("height: " + Main.window_height);
+			workspace.setSize(width, height);
 			close ();
 		});
 		

@@ -26,7 +26,7 @@ public class Main extends Application
     public static SumlToolBar toolBar;
     private ScrollPane workspaceViewport;
     
-    public HashMap<String, SumlWorkspace> workspaces;
+    public static HashMap<String, SumlWorkspace> workspaces;
 
     public static void main(String[] args) 
     {
