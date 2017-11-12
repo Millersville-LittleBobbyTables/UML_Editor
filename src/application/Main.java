@@ -3,9 +3,11 @@ package application;
 import interface_elements.SumlMenuBar;
 import interface_elements.SumlToolBar;
 import interface_elements.SumlToolBar.EditMode;
+import interface_elements.SumlWorkspace;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -33,6 +35,7 @@ public class Main extends Application
     
     public static SumlMenuBar menuBar;
     public static SumlToolBar toolBar;
+    private ScrollPane workspaceViewport;
 
     public static void main(String[] args) 
     {
@@ -57,46 +60,19 @@ public class Main extends Application
         //VBox top = new VBox (menuBar, toolBar, tabBar);
         VBox top = new VBox ();
         top.getChildren().addAll(menuBar.getMenuBar(), toolBar.getToolBar());
-        Pane center = new Pane();
+        
+        workspaceViewport = new ScrollPane ();
+        workspaceViewport.setPannable(true);
+        workspaceViewport.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        workspaceViewport.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        SumlWorkspace w = new SumlWorkspace (5000, 2000);
+        workspaceViewport.setContent(w.getWorkspace());
         
         // Set up layout
         layout.setBackground(new Background(
         		new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         layout.setTop(top);
-        layout.setCenter(center);
-
-        EventHandler<MouseEvent> consumeUnlessMouse = e ->
-        {
-        	if (toolBar.currentEditMode () != EditMode.MOUSE)
-        	{
-        		e.consume();
-        	}
-        };
-        // Disallow deleting boxes unless in mouse mode
-        center.addEventFilter(MouseEvent.MOUSE_PRESSED, consumeUnlessMouse);
-        // Disallow dragging boxes and arrows allowed unless in mouse mode
-        center.addEventFilter(MouseEvent.MOUSE_DRAGGED, consumeUnlessMouse);
-        // Centers clicking logic will be based on the current mode we are in
-        center.setOnMouseClicked( e ->
-        {
-        	if (e.getX() > X_MIN && e.getX() < X_MAX &&
-        		e.getY() > Y_MIN && e.getY() < Y_MAX)
-        	{
-	        	if (toolBar.currentEditMode() == EditMode.ADD_CLASS)
-	        	{
-	        		UMLLayout uml = new UMLLayout(center);
-	        		uml.setPosition (e.getX(), e.getY());
-	        		e.consume();
-	        	}
-	        	else if (toolBar.currentEditMode() == EditMode.ADD_ARROW)
-	        	{
-	                Arrow arrow = ArrowSelector.getArrowSelected(
-	                    ArrowSelector.getIndex(toolBar.currentConnector()), scene);
-	                center.getChildren().addAll(arrow.getLine(), arrow.getTriangle());
-	                arrow.setPosition(e.getX(), e.getY(), e.getX() + 50, e.getY());
-	        	}
-        	}
-        });
+        layout.setCenter(workspaceViewport);
         /* Re-add this in when we have containers for our elements and
          * can have the text fields gain and lose focus with mouse clicks
         scene.addEventHandler(KeyEvent.ANY, e ->
