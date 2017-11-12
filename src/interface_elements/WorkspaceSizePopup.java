@@ -7,6 +7,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -61,6 +62,14 @@ public class WorkspaceSizePopup
 			System.out.println("width: " + Main.window_width);
 			System.out.println("height: " + Main.window_height);
 			close ();
+		});
+		
+		pane.setOnKeyPressed(e ->
+		{
+			if (e.getCode() == KeyCode.ENTER)
+			{
+				submit.fire();
+			}
 		});
 		
 		pane.setPadding(new Insets (15));

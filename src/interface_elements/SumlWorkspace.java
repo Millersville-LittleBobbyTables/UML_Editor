@@ -4,7 +4,6 @@ import application.Main;
 import interface_elements.SumlToolBar.EditMode;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;

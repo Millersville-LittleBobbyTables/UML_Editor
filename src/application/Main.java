@@ -65,7 +65,7 @@ public class Main extends Application
         workspaceViewport.setPannable(true);
         workspaceViewport.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         workspaceViewport.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        SumlWorkspace w = new SumlWorkspace (5000, 2000);
+        SumlWorkspace w = new SumlWorkspace (1200, 825);
         workspaceViewport.setContent(w.getWorkspace());
         
         // Set up layout
