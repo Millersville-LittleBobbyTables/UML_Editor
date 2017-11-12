@@ -42,8 +42,8 @@ public class SumlWorkspace
         // Centers clicking logic will be based on the current mode we are in
         pane.setOnMouseClicked( e ->
         {
-        	if (e.getX() > 0 && e.getX() < width &&
-        		e.getY() > 0 && e.getY() < height)
+        	if (e.getX() > 0 && e.getX() < pane.getWidth() &&
+        		e.getY() > 0 && e.getY() < pane.getHeight())
         	{
 	        	if (Main.toolBar.currentEditMode() == EditMode.ADD_CLASS)
 	        	{

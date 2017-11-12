@@ -21,7 +21,7 @@ public final class SumlMenuBar
 		
 		Menu fileMenu = new Menu ("File");
         Menu editMenu = new Menu ("Edit");
-        MenuItem changeWorkspaceSizeMenuItem = new MenuItem ("Change Canvas Size");
+        MenuItem changeWorkspaceSizeMenuItem = new MenuItem ("Change Workspace Size");
         changeWorkspaceSizeMenuItem.setOnAction(e ->
         {
         	WorkspaceSizePopup changeWorkspaceSizePopup = new WorkspaceSizePopup (owner, Main.workspaces.get("untitled"));
