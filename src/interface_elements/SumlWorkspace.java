@@ -10,9 +10,6 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
 import uml_elements.Arrow;
 import uml_elements.ArrowSelector;
 import uml_elements.UMLLayout;
@@ -21,7 +18,6 @@ public class SumlWorkspace
 {
 	private Pane pane;
 	
-	private double x = 0, y = 0;
 	private double width, height;
 	
 	public SumlWorkspace (double width, double height)
@@ -32,7 +28,7 @@ public class SumlWorkspace
 		pane.setMinHeight(height);
 		pane.setMaxHeight(height);
 		pane.setBackground(new Background (
-				new BackgroundFill (new LinearGradient(0,0,1,1,true,CycleMethod.NO_CYCLE,new Stop (0, Color.GREEN), new Stop (1, Color.BLUE)), CornerRadii.EMPTY, Insets.EMPTY)));
+				new BackgroundFill (Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 		this.width = width;
 		this.height = height;
 		
@@ -56,8 +52,7 @@ public class SumlWorkspace
         	{
 	        	if (Main.toolBar.currentEditMode() == EditMode.ADD_CLASS)
 	        	{
-	        		UMLLayout uml = new UMLLayout(pane);
-	        		uml.setPosition (e.getX(), e.getY());
+	        		UMLLayout uml = new UMLLayout(pane, e.getX(), e.getY());
 	        		e.consume();
 	        	}
 	        	else if (Main.toolBar.currentEditMode() == EditMode.ADD_ARROW)

@@ -19,8 +19,8 @@ public class UMLLayout
 
     private final double X_MIN = 0;
     private final double Y_MIN = 0;
-    private final double X_MAX = 1200;
-    private final double Y_MAX = 850;
+    private double layoutWidth;
+    private double layoutHeight;
 
     private double orgX;
     private double orgY;
@@ -57,6 +57,8 @@ public class UMLLayout
     public UMLLayout(Pane pane)
     {
         layout = pane;
+        layoutWidth = layout.getWidth();
+        layoutHeight = layout.getHeight ();
         init();
     }
 
@@ -66,6 +68,8 @@ public class UMLLayout
     public UMLLayout(Pane pane, double x, double y)
     {
         layout = pane;
+        layoutWidth = layout.getWidth();
+        layoutHeight = layout.getHeight ();
         this.x = x;
         this.y = y;
         init();
@@ -76,7 +80,7 @@ public class UMLLayout
     */
     public void setX(double x)
     {
-        this.x = x;
+    	this.x = UMath.clamp(x, X_MIN, getMaxX());
         setXInLayout();
     }
 
@@ -85,7 +89,7 @@ public class UMLLayout
     */
     public void setY(double y)
     {
-        this.y = y;
+    	this.y = UMath.clamp(y, Y_MIN, getMaxY());
         setYInLayout();
     }
 
@@ -94,11 +98,8 @@ public class UMLLayout
     */
     public void setPosition(double x, double y)
     {
-        this.x = x;
-        this.y = y;
-
-        setXInLayout();
-        setYInLayout();
+    	setX (x);
+    	setY (y);
     }
 
     /**
@@ -115,6 +116,24 @@ public class UMLLayout
     public double getY()
     {
         return y;
+    }
+    
+    /**
+     * Returns the maximum allowed x in the given layout
+     * @return max x
+     */
+    public double getMaxX()
+    {
+    	return layoutWidth - getMaxWidth() - (borderThickness * 2);
+    }
+    
+    /**
+     * Returns the maximum allowed y in the given layout
+     * @return max y
+     */
+    public double getMaxY()
+    {
+    	return layoutHeight - getMaxHeight() - (borderThickness * 2);
     }
 
     /**
@@ -197,7 +216,7 @@ public class UMLLayout
     * objects of the class and setup the event behavior
     */
     private void init()
-    {
+    {	
         currText.setFont(Font.font("Verdana", FontWeight.NORMAL, 12));
         top.setFont(Font.font("Verdana", FontWeight.NORMAL, 12));
         mid.setFont(Font.font("Verdana", FontWeight.NORMAL, 12));
@@ -208,23 +227,23 @@ public class UMLLayout
         cell.setArcHeight(8);
         cell.setOnMousePressed(e -> 
         {
-            orgX = UMath.clamp(e.getX(), X_MIN, X_MAX - getMaxWidth() - (borderThickness * 2));
-            orgY = UMath.clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight() - (borderThickness * 2));
+            orgX = UMath.clamp(e.getX(), X_MIN, getMaxX());
+            orgY = UMath.clamp(e.getY(), Y_MIN, getMaxY());
             moveToFront();
+            e.consume();
         });
         cell.setOnMouseDragged(e -> 
         {
             double translateX = e.getX() - orgX;
             double translateY = e.getY() - orgY;
 
-            orgX = UMath.clamp(e.getX(), X_MIN, X_MAX - getMaxWidth() - (borderThickness * 2));
-            orgY = UMath.clamp(e.getY(), Y_MIN, Y_MAX - getMaxHeight() - (borderThickness * 2));
+            orgX = UMath.clamp(e.getX(), X_MIN, getMaxX());
+            orgY = UMath.clamp(e.getY(), Y_MIN, getMaxY());
 
-            x = UMath.clamp(x + translateX, X_MIN, X_MAX - getMaxWidth() - (borderThickness * 2));
-            y = UMath.clamp(y + translateY, Y_MIN, Y_MAX - getMaxHeight() - (borderThickness * 2));
+            setX (x + translateX);
+            setY (y + translateY);
 
-            setXInLayout();
-            setYInLayout();
+            e.consume();
         });
 
         ImageView imageView = new ImageView(new Image("768px-Red_X.svg.png"));
@@ -250,14 +269,12 @@ public class UMLLayout
             width1 = UMath.maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
             updateWidths();
 
-            deleteButton.setLayoutX(x + getMaxWidth() + borderThickness - barHeight);
-
             height1 = UMath.maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
             top.setPrefHeight(height1);
             cell.setHeight(getMaxHeight() + (borderThickness * 2));
 
-            mid.setLayoutY(y + barHeight + height1 + borderThickness);
-            btm.setLayoutY(y + barHeight + height1 + height2 + borderThickness);
+            setX(x);
+            setY(y);
 
             moveToFront();
         });
@@ -273,13 +290,12 @@ public class UMLLayout
             width2 = UMath.maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
             updateWidths();
 
-            deleteButton.setLayoutX(x + getMaxWidth() + borderThickness - barHeight);
-
             height2 = UMath.maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
             mid.setPrefHeight(height2);
             cell.setHeight(getMaxHeight() + (borderThickness * 2));
 
-            btm.setLayoutY(y + barHeight + height1 + height2 + borderThickness);
+            setX(x);
+            setY(y);
 
             moveToFront();
         });
@@ -295,17 +311,18 @@ public class UMLLayout
             width3 = UMath.maxOfDoubles(mWidth, currText.getLayoutBounds().getWidth() + 20);
             updateWidths();
 
-            deleteButton.setLayoutX(x + getMaxWidth() + borderThickness - barHeight);
-
             height3 = UMath.maxOfDoubles(mHeight, currText.getLayoutBounds().getHeight() * 1.08 + 10);
             btm.setPrefHeight(height3);
             cell.setHeight(getMaxHeight() + (borderThickness * 2));
+            
+            setX(x);
+            setY(y);
 
             moveToFront();
         });
 
-        setXInLayout();
-        setYInLayout();
+        setX (x);
+        setY (y);
         addToLayout();
     }
 }

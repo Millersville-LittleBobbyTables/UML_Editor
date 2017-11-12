@@ -4,13 +4,9 @@ import javafx.scene.Scene;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.paint.Color;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.Cursor;
 import javafx.scene.shape.StrokeType;
 import utility.UMath;
-import javafx.scene.shape.StrokeLineCap;
 import java.lang.Math;
 
 public class Arrow
@@ -261,6 +257,7 @@ public class Arrow
             initX = UMath.clamp(e.getX(), X_MIN, X_MAX);
             initY = UMath.clamp(e.getY(), Y_MIN, Y_MAX);
             moveToFront();
+            e.consume();
         });
 
         line.setOnMouseDragged(e->
@@ -299,6 +296,7 @@ public class Arrow
             updateTriangle();
             updatePosition();
             moveToFront();
+            e.consume();
         });
 
         triangle.setOnMouseEntered(e->
@@ -315,6 +313,7 @@ public class Arrow
             initX = UMath.clamp(e.getX(), X_MIN, X_MAX);
             initY = UMath.clamp(e.getY(), Y_MIN, Y_MAX);
             moveToFront();
+            e.consume();
         });
 
         triangle.setOnMouseDragged(e->
@@ -335,6 +334,7 @@ public class Arrow
                 updatePosition();
             }
             moveToFront();
+            e.consume();
         });
         moveToFront();
     }

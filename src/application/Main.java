@@ -1,41 +1,32 @@
 package application;
 
+import java.util.HashMap;
+
 import interface_elements.SumlMenuBar;
 import interface_elements.SumlToolBar;
-import interface_elements.SumlToolBar.EditMode;
 import interface_elements.SumlWorkspace;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.input.MouseEvent;
 import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 
-import uml_elements.UMLLayout;
-import uml_elements.ArrowSelector;
-import uml_elements.Arrow;
-
 public class Main extends Application 
-{
-    private final double X_MIN = 0;
-    private final double Y_MIN = 0;
-    private final double X_MAX = 1200;
-    private final double Y_MAX = 850;
-	
+{	
     public static double window_width = 1200;
     public static double window_height = 900;
     
     public static SumlMenuBar menuBar;
     public static SumlToolBar toolBar;
     private ScrollPane workspaceViewport;
+    
+    public HashMap<String, SumlWorkspace> workspaces;
 
     public static void main(String[] args) 
     {
@@ -65,8 +56,14 @@ public class Main extends Application
         workspaceViewport.setPannable(true);
         workspaceViewport.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         workspaceViewport.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        SumlWorkspace w = new SumlWorkspace (1200, 825);
-        workspaceViewport.setContent(w.getWorkspace());
+        workspaceViewport.setStyle("-fx-background:#555555; -fx-focus-color:transparent;");
+        
+        workspaces = new HashMap<String, SumlWorkspace> ();
+        
+        workspaces.put("untitled", new SumlWorkspace (1200, 825));
+        
+        workspaceViewport.setContent(workspaces.get("untitled").getWorkspace());
+        
         
         // Set up layout
         layout.setBackground(new Background(
