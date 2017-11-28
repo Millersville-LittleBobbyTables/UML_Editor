@@ -90,7 +90,11 @@ public class SumlToolBar
         	currentMode = EditMode.ADD_ARROW;
         });
 
-        deleteModeButton = new ToggleButton ("Delete");
+        ImageView deleteModeImage = new ImageView(new Image ("RedX.png"));
+        deleteModeImage.setFitWidth(22);
+        deleteModeImage.setFitHeight(22);
+        
+        deleteModeButton = new ToggleButton ("", deleteModeImage);
         deleteModeButton.setToggleGroup(editingModes);
         deleteModeButton.setTooltip(new Tooltip ("Delete UML Element"));
         deleteModeButton.setOnMouseClicked(e ->
@@ -111,8 +115,8 @@ public class SumlToolBar
         arrowTypeSelector.setPrefHeight(20);
         arrowTypeSelector.setTooltip(new Tooltip ("Arrow type"));
         
-        toolBar.getChildren().addAll(mouseModeButton, deleteModeButton, addClassModeButton,
-        		addArrowModeButton, arrowTypeSelector);
+        toolBar.getChildren().addAll(mouseModeButton, addClassModeButton,
+        		addArrowModeButton, deleteModeButton, arrowTypeSelector);
 	}
 	
 	public HBox getToolBar ()
