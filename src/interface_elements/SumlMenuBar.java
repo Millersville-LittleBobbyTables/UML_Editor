@@ -15,6 +15,9 @@ public final class SumlMenuBar
 {
 	private MenuBar menuBar;
 	
+	/**
+	* Constructs the MenuBar for the SUML application
+	*/
 	public SumlMenuBar(Stage owner)
 	{
 		menuBar = new MenuBar ();
@@ -24,21 +27,41 @@ public final class SumlMenuBar
         MenuItem changeWorkspaceSizeMenuItem = new MenuItem ("Change Workspace Size");
         changeWorkspaceSizeMenuItem.setOnAction(e ->
         {
-        	WorkspaceSizePopup changeWorkspaceSizePopup = new WorkspaceSizePopup (owner, Main.workspaces.get("untitled"));
+        	WorkspaceSizePopup changeWorkspaceSizePopup = new WorkspaceSizePopup (owner, Main.workspace);
         	changeWorkspaceSizePopup.show ();
         });
         editMenu.getItems().add(changeWorkspaceSizeMenuItem);
-        
+
+        MenuItem newMenuItem = new MenuItem ("New");
+        newMenuItem.setOnAction(e ->
+        {
+        	Main.workspace.reset();
+        });
+
+        MenuItem saveMenuItem = new MenuItem ("Save");
+        saveMenuItem.setOnAction(e ->
+        {
+        	Main.fileChooser.saveFile(Main.workspace.getContext());
+        });
+
+        MenuItem openMenuItem = new MenuItem ("Open");
+        openMenuItem.setOnAction(e ->
+        {
+        	Main.workspace.create(Main.fileChooser.openFile());
+        });
+
+        fileMenu.getItems().addAll(newMenuItem, saveMenuItem, openMenuItem);
         // Setting up menuBar formatting
         menuBar.setBackground(new Background (
         		new BackgroundFill (Color.SILVER, CornerRadii.EMPTY, Insets.EMPTY)));
-        //menuBar.setBorder(botGreyBorder);
         menuBar.getMenus().addAll (fileMenu, editMenu);
 	}
-	
-	public MenuBar getMenuBar ()
+
+	/**
+	* @return MenuBar the menu along the top of the screen (file and edit)
+	*/
+	public MenuBar getMenuBar()
 	{
 		return menuBar;
 	}
-
 }

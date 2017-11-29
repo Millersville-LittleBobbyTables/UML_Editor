@@ -32,7 +32,11 @@ public class SumlToolBar
 	
 	private String currentConnector = ArrowContainer.ArrowType[0];
 	
-	public SumlToolBar() {
+    /**
+    * Constructs a HBox with additional ToggleGroup Functionality
+    */
+	public SumlToolBar() 
+    {
 		toolBar = new HBox ();
 		
         // Set up toolBar formatting
@@ -115,16 +119,25 @@ public class SumlToolBar
         		addArrowModeButton, arrowTypeSelector);
 	}
 	
+    /**
+    * @return HBox that holds the tool bar buttons and choice box
+    */
 	public HBox getToolBar ()
 	{
 		return toolBar;
 	}
 	
+    /**
+    * @return String of current connector
+    */
 	public String currentConnector ()
 	{
 		return currentConnector;
 	}
 	
+    /**
+    * @return EditMode current toggle mode enum
+    */
 	public EditMode currentEditMode ()
 	{
 		return currentMode;
