@@ -24,7 +24,7 @@ public final class SumlMenuBar
         MenuItem changeWorkspaceSizeMenuItem = new MenuItem ("Change Workspace Size");
         changeWorkspaceSizeMenuItem.setOnAction(e ->
         {
-        	WorkspaceSizePopup changeWorkspaceSizePopup = new WorkspaceSizePopup (owner, Main.workspaces.get("untitled"));
+        	WorkspaceSizePopup changeWorkspaceSizePopup = new WorkspaceSizePopup (owner, Main.workspace);
         	changeWorkspaceSizePopup.show ();
         });
         editMenu.getItems().add(changeWorkspaceSizeMenuItem);

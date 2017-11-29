@@ -1,7 +1,5 @@
 package application;
 
-import java.util.HashMap;
-
 import interface_elements.SumlMenuBar;
 import interface_elements.SumlToolBar;
 import interface_elements.SumlWorkspace;
@@ -25,10 +23,9 @@ public class Main extends Application
     public static SumlMenuBar menuBar;
     public static SumlToolBar toolBar;
     private ScrollPane workspaceViewport;
+    public static SumlWorkspace workspace;
 
     public static Scene scene;
-    
-    public static HashMap<String, SumlWorkspace> workspaces;
 
     public static void main(String[] args) 
     {
@@ -60,35 +57,15 @@ public class Main extends Application
         workspaceViewport.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         workspaceViewport.setStyle("-fx-background:#555555; -fx-focus-color:transparent;");
         
-        workspaces = new HashMap<String, SumlWorkspace> ();
-        
-        workspaces.put("untitled", new SumlWorkspace (1200, 825));
-        
-        workspaceViewport.setContent(workspaces.get("untitled").getWorkspace());
+        workspace = new SumlWorkspace (1200, 825);
+        workspaceViewport.setContent(workspace.getWorkspace());
         
         // Set up layout
         layout.setBackground(new Background(
         		new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
         layout.setTop(top);
         layout.setCenter(workspaceViewport);
-        /* Re-add this in when we have containers for our elements and
-         * can have the text fields gain and lose focus with mouse clicks
-        scene.addEventHandler(KeyEvent.ANY, e ->
-        {
-        	if (e.getCode() == KeyCode.C)
-        	{
-        		addClassModeButton.setSelected(true);
-        	}
-        	else if (e.getCode() == KeyCode.A)
-        	{
-        		addArrowModeButton.setSelected(true);
-        	}
-        	else if (e.getCode() == KeyCode.M)
-        	{
-        		mouseModeButton.setSelected(true);
-        	}
-        });
-        */
+
         primaryStage.setScene(scene);
         primaryStage.setTitle("Simple UML");
         primaryStage.show();
