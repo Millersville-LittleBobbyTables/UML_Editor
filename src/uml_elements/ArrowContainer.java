@@ -320,12 +320,12 @@ public class ArrowContainer
 
 	        triangle.setOnMouseEntered(e ->
 	        {
-	            scene.setCursor(Cursor.HAND);
+	            Main.workspaceViewport.setCursor(Cursor.HAND);
 	        });
 
 	        triangle.setOnMouseExited(e->
 	        {
-	            scene.setCursor(Cursor.DEFAULT);
+	            Main.workspaceViewport.setCursor(Cursor.DEFAULT);
 	        });
 	        
 	        triangle.setOnMousePressed(e->

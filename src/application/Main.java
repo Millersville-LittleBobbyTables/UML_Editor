@@ -22,7 +22,7 @@ public class Main extends Application
     
     public static SumlMenuBar menuBar;
     public static SumlToolBar toolBar;
-    private ScrollPane workspaceViewport;
+    public static ScrollPane workspaceViewport;
     public static SumlWorkspace workspace;
 
     public static Scene scene;
