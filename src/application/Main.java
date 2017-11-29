@@ -4,6 +4,7 @@ import interface_elements.SumlMenuBar;
 import interface_elements.SumlToolBar;
 import interface_elements.SumlWorkspace;
 import javafx.application.Application;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
@@ -42,6 +43,12 @@ public class Main extends Application
     {
         BorderPane layout = new BorderPane();
         scene = new Scene( layout, window_width, window_height );
+        // Fixes cursor bug where the cursor stays in hand mode if dragging the arrow head past
+        // the edge of the screen and letting go outside of the window and then returning.
+        // Kinda hacky.
+        scene.setOnMouseEntered(e -> {
+        	workspaceViewport.setCursor(Cursor.DEFAULT);
+        });
         
         menuBar = new SumlMenuBar (primaryStage);
         toolBar = new SumlToolBar ();

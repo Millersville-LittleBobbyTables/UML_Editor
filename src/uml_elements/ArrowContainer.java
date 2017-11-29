@@ -42,19 +42,19 @@ public class ArrowContainer
         Arrow arrow;
         if      (index == 0)
         {
-            arrow = new Arrow(arrows.size(), false, true, true);
+            arrow = new Arrow(arrows.size(), false, true, true, layout);
         }
         else if (index == 1)
         {
-            arrow = new Arrow(arrows.size(), true,  true, true);  
+            arrow = new Arrow(arrows.size(), true,  true, true, layout);  
         }
         else if (index == 2)
         {
-            arrow = new Arrow(arrows.size(), false, true, false);
+            arrow = new Arrow(arrows.size(), false, true, false, layout);
         }
         else
         {
-            arrow = new Arrow(arrows.size(), true,  true, false);
+            arrow = new Arrow(arrows.size(), true,  true, false, layout);
         }
         arrow.setPosition(x, y, x + xLength, y);
 		arrows.add(arrow);
@@ -81,9 +81,6 @@ public class ArrowContainer
 	    private double X_MIN = triangleHeight;
 	    private double Y_MIN = triangleHeight;
 
-	    private double X_MAX = 1180;
-	    private double Y_MAX = 830;
-
 	    private double orgX = X_MIN;
 	    private double orgY = Y_MIN;
 	    private double endX = X_MIN + 50;
@@ -102,6 +99,8 @@ public class ArrowContainer
 	    private Line line = new Line();
 	    private Polygon triangle = new Polygon();
 
+	    private Pane layout;
+	    
 	    private int index;
 
 	    /**
@@ -111,12 +110,13 @@ public class ArrowContainer
 	    *   boolean to make the arrow open like this (--->).
 	    */
 	    Arrow(int index, boolean isDash, boolean isTriVisible, 
-	        boolean isNotClosed)
+	        boolean isNotClosed, Pane layout)
 	    {
 	        this.index = index;
 	        this.isDash = isDash;
 	        this.isTriVisible = isTriVisible;
 	        this.isNotClosed = isNotClosed;
+	        this.layout = layout;
 	        init();
 	    }
 
@@ -228,6 +228,40 @@ public class ArrowContainer
 	            newX2, newY2
 	        });
 	    }
+	    
+	    /**
+	     * Clamps the arrow to inside the layout bounds
+	     */
+	    private void clampToBounds()
+	    {
+        	double x = getXLength() + X_MIN;
+            
+            if ( orgX < endX )
+            {
+                orgX = UMath.clamp(orgX, X_MIN, layout.getWidth() - triangleHeight - getXLength());
+                endX = UMath.clamp(endX, x, layout.getWidth() - triangleHeight);
+            }
+            else
+            {
+                endX = UMath.clamp(endX, X_MIN, layout.getWidth() - triangleHeight - getXLength());
+                orgX = UMath.clamp(orgX, x, layout.getWidth() - triangleHeight);
+            }
+
+            double y = getYLength() + Y_MIN;
+
+            if ( orgY < endY )
+            {
+                orgY = UMath.clamp(orgY, Y_MIN, layout.getHeight() - triangleHeight - getYLength());
+                endY = UMath.clamp(endY, y, layout.getHeight() - triangleHeight);
+            }
+            else
+            {
+                endY = UMath.clamp(endY, Y_MIN, layout.getHeight() - triangleHeight - getYLength());
+                orgY = UMath.clamp(orgY, y, layout.getHeight() - triangleHeight);
+            }
+            updateTriangle();
+            updatePosition();
+	    }
 
 	    /**
 	    * initializes all objects with properly defined behavior
@@ -265,47 +299,27 @@ public class ArrowContainer
 
 	        line.setOnMousePressed(e->
 	        {
-	            initX = UMath.clamp(e.getX(), X_MIN, X_MAX);
-	            initY = UMath.clamp(e.getY(), Y_MIN, Y_MAX);
+	            initX = UMath.clamp(e.getX(), X_MIN, layout.getWidth() - triangleHeight);
+	            initY = UMath.clamp(e.getY(), Y_MIN, layout.getHeight() - triangleHeight);
 	            moveToFront();
 	            e.consume();
 	        });
 
 	        line.setOnMouseDragged(e->
 	        {
-	            double newX = UMath.clamp(e.getX(), X_MIN, X_MAX);
+	            double newX = UMath.clamp(e.getX(), X_MIN, layout.getWidth() - triangleHeight);
 	            double translateX = newX - initX;
 	            initX = newX;
-	            double x = getXLength() + X_MIN;
-	            
-	            if ( orgX < endX )
-	            {
-	                orgX = UMath.clamp(orgX + translateX, X_MIN, X_MAX - getXLength());
-	                endX = UMath.clamp(endX + translateX, x, X_MAX);
-	            }
-	            else
-	            {
-	                endX = UMath.clamp(endX + translateX, X_MIN, X_MAX - getXLength());
-	                orgX = UMath.clamp(orgX + translateX, x, X_MAX);
-	            }
+	            orgX += translateX;
+	            endX += translateX;
 
-	            double newY = UMath.clamp(e.getY(), Y_MIN, Y_MAX);
+	            double newY = UMath.clamp(e.getY(), Y_MIN, layout.getHeight() - triangleHeight);
 	            double translateY = newY - initY;
 	            initY = newY;
-	            double y = getYLength() + Y_MIN;
-
-	            if ( orgY < endY )
-	            {
-	                orgY = UMath.clamp(orgY + translateY, Y_MIN, Y_MAX - getYLength());
-	                endY = UMath.clamp(endY + translateY, y, Y_MAX);
-	            }
-	            else
-	            {
-	                endY = UMath.clamp(endY + translateY, Y_MIN, Y_MAX - getYLength());
-	                orgY = UMath.clamp(orgY + translateY, y, Y_MAX);
-	            }
-	            updateTriangle();
-	            updatePosition();
+	            orgY += translateY;
+	            endY += translateY;
+	            
+	            clampToBounds();
 	            moveToFront();
 	            e.consume();
 	        });
@@ -330,22 +344,22 @@ public class ArrowContainer
 	        
 	        triangle.setOnMousePressed(e->
 	        {
-	            initX = UMath.clamp(e.getX(), X_MIN, X_MAX);
-	            initY = UMath.clamp(e.getY(), Y_MIN, Y_MAX);
+	            initX = UMath.clamp(e.getX(), X_MIN, layout.getWidth() - triangleHeight);
+	            initY = UMath.clamp(e.getY(), Y_MIN, layout.getHeight() - triangleHeight);
 	            moveToFront();
 	            e.consume();
 	        });
 
 	        triangle.setOnMouseDragged(e->
 	        {
-	            double newX = UMath.clamp(e.getX(), X_MIN, X_MAX);
-	            double newY = UMath.clamp(e.getY(), Y_MIN, Y_MAX);
+	            double newX = UMath.clamp(e.getX(), X_MIN, layout.getWidth() - triangleHeight);
+	            double newY = UMath.clamp(e.getY(), Y_MIN, layout.getHeight() - triangleHeight);
 	            double translateX = newX - initX;
 	            double translateY = newY - initY;
 	            initX = newX;
 	            initY = newY;
-	            newX = UMath.clamp(endX + translateX, X_MIN, X_MAX);
-	            newY = UMath.clamp(endY + translateY, Y_MIN, Y_MAX);
+	            newX = UMath.clamp(endX + translateX, X_MIN, layout.getWidth() - triangleHeight);
+	            newY = UMath.clamp(endY + translateY, Y_MIN, layout.getHeight() - triangleHeight);
 	            if (newX != orgX || newY != orgY)
 	            {
 	                endX = newX;
@@ -356,6 +370,16 @@ public class ArrowContainer
 	            moveToFront();
 	            e.consume();
 	        });
+	        
+	        layout.widthProperty().addListener( (obs, oldValue, newValue) ->
+	        {
+	        	clampToBounds();
+	        });
+	        layout.heightProperty().addListener( (obs, oldValue, newValue) ->
+	        {
+	        	clampToBounds();
+	        });
+	        
 	        moveToFront();
 	    }
 	}
