@@ -2,13 +2,10 @@ package uml_elements;
 
 import java.util.Vector;
 import javafx.scene.layout.Pane;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.Scene;
+import javafx.scene.Cursor;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.paint.Color;
-import javafx.scene.Cursor;
 import javafx.scene.shape.StrokeType;
 import utility.UMath;
 import java.lang.Math;
@@ -22,16 +19,28 @@ public class ArrowContainer
 
 	private static final double xLength = 50;
 	private Vector<Arrow> arrows = new Vector<Arrow>();
-	private Scene scene;
     private Pane layout;
 
-    public ArrowContainer(Pane layout, Scene scene)
+    /**
+    * Constructs container with the Pane
+    */
+    public ArrowContainer(Pane layout)
     {
     	this.layout = layout;
-    	this.scene = scene;
     }
 
-	public void addArrow(String arrowType, double x, double y)
+    /**
+    * Adds a default Arrow to the vector of desired arrowType at (x,y)
+    */
+	public void add(String arrowType, double x, double y)
+	{
+		add(arrowType, x, y, x + xLength, y);
+	}
+
+	/**
+    * Adds an Arrow to the vector of desired arrowType with points (beginX, beginY) to (endX, endY)
+    */
+	public void add(String arrowType, double beginX, double beginY, double endX, double endY)
 	{
 		int index = 0;
         for (int i = 0; i < ArrowType.length; ++i)
@@ -40,40 +49,85 @@ public class ArrowContainer
         }
 
         Arrow arrow;
-        if      (index == 0)
+        if (index == 0)
         {
-            arrow = new Arrow(arrows.size(), false, true, true, layout);
+        	arrow = new Arrow(arrowType, arrows.size(), false, true, true, layout);
         }
         else if (index == 1)
         {
-            arrow = new Arrow(arrows.size(), true,  true, true, layout);  
+            arrow = new Arrow(arrowType, arrows.size(), true,  true, true, layout);  
         }
         else if (index == 2)
         {
-            arrow = new Arrow(arrows.size(), false, true, false, layout);
+            arrow = new Arrow(arrowType, arrows.size(), false, true, false, layout);
         }
         else
         {
-            arrow = new Arrow(arrows.size(), true,  true, false, layout);
+            arrow = new Arrow(arrowType, arrows.size(), true,  true, false, layout);
         }
-        arrow.setPosition(x, y, x + xLength, y);
+        arrow.setPosition(beginX, beginY, endX, endY);
 		arrows.add(arrow);
-		layout.getChildren().addAll(arrow.getLine(), arrow.getTriangle());
+		layout.getChildren().addAll(arrow.line, arrow.triangle);
 	}
 
-	public void removeArrow(int index)
+	/**
+	* Removes index from container and pane
+	*/
+	public void remove(int index)
 	{
-		layout.getChildren().removeAll(arrows.elementAt(index).getLine(), 
-			arrows.elementAt(index).getTriangle());
+		int initSize = arrows.size() - 1;
+		removeFromLayout(index);
 		arrows.remove(index);
+		if (index < initSize)
+		{
+			for (int i = 0; i < arrows.size(); ++i)
+			{
+				arrows.elementAt(i).index = i;
+			} 
+		}
 	}
 
+	/**
+	* Clears the vector and removes all arrows from the layout
+	*/
 	public void clear()
 	{
+		for (int i = 0; i < arrows.size(); ++i)
+		{
+			removeFromLayout(i);
+		}
 		arrows.clear();
-		layout.getChildren().clear();
 	}
 
+	/**
+	* @return String representation of the ArrowContainer
+	*/
+	public String toString()
+	{
+		String str = "";
+		Arrow arrow;
+		for (int i = 0; i < arrows.size(); ++i)
+		{
+			arrow = arrows.elementAt(i);
+			str += 		arrow.orgX
+				+ " " + arrow.orgY 
+				+ " " + arrow.endX 
+				+ " " + arrow.endY 
+				+ " " + arrow.arrowType + "\n";
+		}
+		return str;
+	}
+
+	/**
+	* Removes arrow at an index from the pane
+	**/
+	private void removeFromLayout(int index)
+	{
+		layout.getChildren().removeAll(arrows.elementAt(index).line, 
+			arrows.elementAt(index).triangle);
+	}
+
+	// Private class is used since an Arrow cannot be constructed without a container
 	private class Arrow
 	{
 	    private double triangleHeight = 25;
@@ -96,12 +150,13 @@ public class ArrowContainer
 	    private boolean isNotClosed     = false;
 	    private boolean isTriVisible    = false;
 
-	    private Line line = new Line();
-	    private Polygon triangle = new Polygon();
+	    public Line line = new Line();
+	    public Polygon triangle = new Polygon();
 
 	    private Pane layout;
 	    
-	    private int index;
+	    public int index;
+	    public String arrowType;
 
 	    /**
 	    * Constructs an Arrow object with a scene to allow for cursor changes,
@@ -109,31 +164,16 @@ public class ArrowContainer
 	    *   boolean to make the triangle invisible or not, and a isNotClosed
 	    *   boolean to make the arrow open like this (--->).
 	    */
-	    Arrow(int index, boolean isDash, boolean isTriVisible, 
+	    Arrow(String arrowType, int index, boolean isDash, boolean isTriVisible, 
 	        boolean isNotClosed, Pane layout)
 	    {
+	    	this.arrowType = arrowType;
 	        this.index = index;
 	        this.isDash = isDash;
 	        this.isTriVisible = isTriVisible;
 	        this.isNotClosed = isNotClosed;
 	        this.layout = layout;
 	        init();
-	    }
-
-	    /**
-	    * @return Line object
-	    */
-	    public Line getLine()
-	    {
-	        return line;
-	    }
-
-	    /**
-	    * @return Polygon triangle
-	    */
-	    public Polygon getTriangle()
-	    {
-	        return triangle;
 	    }
 
 	    /**
@@ -293,7 +333,7 @@ public class ArrowContainer
 	        {
 	            if (Main.toolBar.currentEditMode() == EditMode.DELETE_MODE)
 	            {
-	                removeArrow(index);
+	                remove(index);
 	            }
 	        });
 
@@ -328,10 +368,10 @@ public class ArrowContainer
 	        {
 	            if (Main.toolBar.currentEditMode() == EditMode.DELETE_MODE)
 	            {
-	                removeArrow(index);
+	                remove(index);
 	            }
 	        });
-
+	        
 	        triangle.setOnMouseEntered(e ->
 	        {
 	            Main.workspaceViewport.setCursor(Cursor.HAND);

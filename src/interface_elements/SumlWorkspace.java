@@ -10,14 +10,16 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import uml_elements.ArrowContainer;
-import uml_elements.UMLLayout;
+import uml_elements.UMLContext;
 
 public class SumlWorkspace
 {
 	private Pane pane;
-	private ArrowContainer container;
+	private UMLContext container;
 	
+	/**
+	* Constructs the Pane and Container for the SUML application
+	*/
 	public SumlWorkspace (double width, double height)
 	{
 		pane = new Pane ();
@@ -41,7 +43,7 @@ public class SumlWorkspace
         // Disallow dragging boxes and arrows allowed unless in mouse mode
         pane.addEventFilter(MouseEvent.MOUSE_DRAGGED, consumeUnlessMouse);
         // Centers clicking logic will be based on the current mode we are in
-        container = new ArrowContainer(pane, Main.scene);
+        container = new UMLContext(pane);
         pane.setOnMouseClicked( e ->
         {
         	if (e.getX() > 0 && e.getX() < pane.getWidth() &&
@@ -49,7 +51,7 @@ public class SumlWorkspace
         	{
 	        	if (Main.toolBar.currentEditMode() == EditMode.ADD_CLASS)
 	        	{
-	        		new UMLLayout(pane, e.getX(), e.getY());
+	        		container.addUML(e.getX(), e.getY());
 	        		e.consume();
 	        	}
 	        	else if (Main.toolBar.currentEditMode() == EditMode.ADD_ARROW)
@@ -61,36 +63,78 @@ public class SumlWorkspace
         });
 	}
 	
+	/**
+	* Set size for the pane
+	*/
 	public void setSize (double width, double height)
 	{
 		pane.setMinSize(width, height);
 		pane.setMaxSize(width, height);
 	}
 	
+	/**
+	* Set width for the pane
+	*/
 	public void setWidth (double width)
 	{
 		pane.setMinWidth(width);
 		pane.setMaxWidth(width);
 	}
 	
+	/**
+	* Set height for the pane
+	*/
 	public void setHeight (double height)
 	{
 		pane.setMinHeight(height);
 		pane.setMaxHeight(height);
 	}
+
+	/**
+	* Clears the UML context
+	*/
+	public void reset()
+	{
+		container.reset();
+	}
 	
+	/**
+	* @return double width of the pane
+	*/
 	public double getWidth ()
 	{
 		return pane.getWidth();
 	}
 	
+	/**
+	* @return double height of the pane
+	*/
 	public double getHeight ()
 	{
 		return pane.getHeight();
 	}
 	
+	/**
+	* @return Pane which is the layout for the center of the SUML application
+	*/
 	public Pane getWorkspace ()
 	{
 		return pane;
+	}
+
+	/**
+	* @return String of the UML context
+	*/
+	public String getContext()
+	{
+		return container.toString();
+	}
+
+	/**
+	* Create a new UML context from a String
+	*/
+	public void create(String context)
+	{
+		container.create(context);
 	}
 }

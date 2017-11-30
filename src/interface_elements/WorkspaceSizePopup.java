@@ -18,6 +18,9 @@ public class WorkspaceSizePopup
 	
 	final private int textFieldWidth = 100;
 	
+	/**
+	* Construct a window that allows the user to change the workspace size
+	*/
 	public WorkspaceSizePopup (Stage owner, SumlWorkspace workspace)
 	{
 		stage = new Stage ();
@@ -49,14 +52,16 @@ public class WorkspaceSizePopup
 			try
 		    {
 				width = Double.valueOf(widthField.getText()).doubleValue();
-	    	} catch (NumberFormatException nfe)
+	    	} 
+	    	catch (NumberFormatException nfe)
 			{
 	           System.out.println ("Could not parse workspace width.");
 			}
 			try
 			{
 				height = Double.valueOf(heightField.getText()).doubleValue();
-			} catch (NumberFormatException nfe)
+			} 
+			catch (NumberFormatException nfe)
 			{
 	           System.out.println ("Could not parse workspace height.");
 			}
@@ -84,11 +89,17 @@ public class WorkspaceSizePopup
 		stage.setResizable(false);
 	}
 	
+	/**
+	* Show the stage
+	*/
 	public void show ()
 	{
-		stage.show ();
+		stage.show();
 	}
 	
+	/**
+	* Close the stage
+	*/
 	public void close ()
 	{
 		stage.close();
