@@ -31,7 +31,13 @@ public class UMLContainerTest
 	}
 	
 	@Test
-	public void testCtorAddsRectangle()
+	public void testIsEmptyAfterCtor()
+	{
+		assertTrue (layout.getChildren().isEmpty());
+	}
+	
+	@Test
+	public void testAddForRectangle()
 	{
 		umlContainer.add(40, 40);
 		
@@ -48,7 +54,7 @@ public class UMLContainerTest
 	}
 	
 	@Test
-	public void testCtorAddsTextAreas()
+	public void testAddForTextAreas()
 	{
 		umlContainer.add(32, 109);
 		
@@ -131,7 +137,8 @@ public class UMLContainerTest
 		TextArea t12 = umlContainer.btmAt (1);
 		t12.setText("super\nduper\n");
 
-		assertTrue (umlContainer.toString().equals("0.0 0.0\n" +
+		assertTrue (umlContainer.toString().equals(
+				"0.0 0.0\n" +
 			    "[\n" +
 				"testingTop\n" +
 			    "]\n" +
@@ -154,8 +161,8 @@ public class UMLContainerTest
 				"[\n" +
 			    "super\n" +
 				"duper\n" +
-				"]\n") 
-		);
+				"]\n"
+		));
 	}
 
 }
