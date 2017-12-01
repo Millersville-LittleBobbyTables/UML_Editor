@@ -2,7 +2,6 @@ package interface_elements;
 
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
-import java.awt.Desktop;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.FileNotFoundException;
@@ -11,7 +10,6 @@ import java.util.Scanner;
 public class SumlFileChooser
 {
 	private FileChooser fileChooser = new FileChooser();
-	private Desktop desktop = Desktop.getDesktop();
 	private Stage stage;
 
 	/**
@@ -33,7 +31,10 @@ public class SumlFileChooser
 		fileChooser.setTitle("Open File");
 		try
 		{
-			return new Scanner(fileChooser.showOpenDialog(stage)).useDelimiter("\\Z").next();
+			Scanner s = new Scanner(fileChooser.showOpenDialog(stage));
+			String contents = s.useDelimiter("\\Z").next();
+			s.close();
+			return contents;
 		}
 		// Has to catch all since if the file is null it will send an exception 
 		// 		so we want to return ""

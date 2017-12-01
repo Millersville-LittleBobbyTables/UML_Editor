@@ -100,6 +100,8 @@ public class SumlWorkspace
 	public void reset()
 	{
 		container.reset();
+		setWidth (Main.DEFAULT_WORKSPACE_WIDTH);
+		setHeight (Main.DEFAULT_WORKSPACE_HEIGHT);
 	}
 	
 	/**
@@ -139,8 +141,11 @@ public class SumlWorkspace
 	*/
 	public void create(String context)
 	{
-		container.create(context);
-		setWidth(container.width);
-		setHeight(container.height);
+		if (context != "")
+		{
+			container.create(context);
+			setWidth(container.width);
+			setHeight(container.height);
+		}
 	}
 }

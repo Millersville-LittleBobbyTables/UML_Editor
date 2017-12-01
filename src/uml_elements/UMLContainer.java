@@ -3,15 +3,11 @@ package uml_elements;
 import java.util.Vector;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Button;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import utility.UMath;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.Image;
-import javafx.geometry.Insets;
 import application.Main;
 import interface_elements.SumlToolBar.EditMode;
 

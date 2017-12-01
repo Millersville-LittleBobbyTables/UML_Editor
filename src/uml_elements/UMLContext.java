@@ -75,12 +75,12 @@ public class UMLContext
 		{
 			int i = 0;
 			Scanner scanner = new Scanner(context);
-			Scanner lineScanner;
 			double params[] = new double[4];
 			String arrowType = "";
+			Scanner lineScanner = new Scanner(scanner.nextLine());
 			
-			width = scanner.nextDouble ();
-			height = scanner.nextDouble ();
+			width = lineScanner.nextDouble ();
+			height = lineScanner.nextDouble ();
 
 			// Begin Processing Arrow Data
 			while (scanner.hasNextLine())
@@ -241,6 +241,8 @@ public class UMLContext
 				} 
 				while (scanner.hasNextLine());
 			}
+			lineScanner.close();
+			scanner.close();
 		}
 	}
 }

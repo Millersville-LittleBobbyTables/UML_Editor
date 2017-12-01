@@ -21,6 +21,9 @@ public class Main extends Application
 {	
     public static double window_width = 1200;
     public static double window_height = 900;
+    
+    public static final double DEFAULT_WORKSPACE_WIDTH = 2000;
+    public static final double DEFAULT_WORKSPACE_HEIGHT = 1000;
 
     public static Scene scene;
     public static Stage window;
@@ -61,16 +64,14 @@ public class Main extends Application
 
         VBox top = new VBox ();
         top.getChildren().addAll(menuBar.getMenuBar(), toolBar.getToolBar());
-        workspace = new SumlWorkspace (window_width, 825);
         
         workspaceViewport = new ScrollPane ();
         workspaceViewport.setPannable(true);
         workspaceViewport.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         workspaceViewport.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         workspaceViewport.setStyle("-fx-background:#555555; -fx-focus-color:transparent;");
-        workspaceViewport.setContent(workspace.getWorkspace());
         
-        workspace = new SumlWorkspace (1200, 825);
+        workspace = new SumlWorkspace (DEFAULT_WORKSPACE_WIDTH, DEFAULT_WORKSPACE_HEIGHT);
         workspaceViewport.setContent(workspace.getWorkspace());
         
         layout.setBackground(new Background(new BackgroundFill(Color.DARKGREY, CornerRadii.EMPTY, Insets.EMPTY)));
