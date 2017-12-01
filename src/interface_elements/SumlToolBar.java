@@ -66,6 +66,20 @@ public class SumlToolBar
         	currentMode = EditMode.MOUSE;
         });
         
+        // Set up the 'delete mode' ToggleButton
+        ImageView deleteModeImage = new ImageView(new Image ("RedX.png"));
+        deleteModeImage.setFitWidth(22);
+        deleteModeImage.setFitHeight(22);
+        
+        deleteModeButton = new ToggleButton ("", deleteModeImage);
+        deleteModeButton.setToggleGroup(editingModes);
+        deleteModeButton.setTooltip(new Tooltip ("Delete UML Element"));
+        deleteModeButton.setOnMouseClicked(e ->
+        {
+            deleteModeButton.setSelected(true);
+            currentMode = EditMode.DELETE_MODE;
+        });
+        
         // Set up the 'add class mode' ToggleButton
         ImageView addClassModeImage = new ImageView(new Image ("AddClass.png"));
         addClassModeImage.setFitWidth (20);
@@ -93,19 +107,6 @@ public class SumlToolBar
         	addArrowModeButton.setSelected(true);
         	currentMode = EditMode.ADD_ARROW;
         });
-
-        ImageView deleteModeImage = new ImageView(new Image ("RedX.png"));
-        deleteModeImage.setFitWidth(22);
-        deleteModeImage.setFitHeight(22);
-        
-        deleteModeButton = new ToggleButton ("", deleteModeImage);
-        deleteModeButton.setToggleGroup(editingModes);
-        deleteModeButton.setTooltip(new Tooltip ("Delete UML Element"));
-        deleteModeButton.setOnMouseClicked(e ->
-        {
-            deleteModeButton.setSelected(true);
-            currentMode = EditMode.DELETE_MODE;
-        });
         
         // Set up the connectorSelector ChoiceBox
         arrowTypeSelector = new ChoiceBox<>();
@@ -119,8 +120,8 @@ public class SumlToolBar
         arrowTypeSelector.setPrefHeight(20);
         arrowTypeSelector.setTooltip(new Tooltip ("Arrow type"));
         
-        toolBar.getChildren().addAll(mouseModeButton, addClassModeButton,
-        		addArrowModeButton, deleteModeButton, arrowTypeSelector);
+        toolBar.getChildren().addAll(mouseModeButton, deleteModeButton, addClassModeButton,
+        		addArrowModeButton, arrowTypeSelector);
 	}
 	
     /**
