@@ -10,6 +10,8 @@ public class UMLContext
 {
 	private UMLContainer classes;
 	private ArrowContainer arrows;
+	public double width;
+	public double height;
 
 	/**
 	* Constructs the containers
@@ -18,6 +20,8 @@ public class UMLContext
 	{
 		classes = new UMLContainer(pane);
 		arrows = new ArrowContainer(pane);
+		width = pane.getMaxWidth();
+		height = pane.getMaxHeight();
 	}
 
 	/**
@@ -58,7 +62,7 @@ public class UMLContext
 	*/
 	public String toString()
 	{
-		return arrows.toString() + classes.toString();
+		return width + " " + height + "\n" + arrows.toString() + classes.toString();
 	}
 
 	/**
@@ -70,11 +74,13 @@ public class UMLContext
 		if (!context.equals(""))
 		{
 			int i = 0;
-			System.out.println("GETS HERE");
 			Scanner scanner = new Scanner(context);
 			Scanner lineScanner;
 			double params[] = new double[4];
 			String arrowType = "";
+			
+			width = scanner.nextDouble ();
+			height = scanner.nextDouble ();
 
 			// Begin Processing Arrow Data
 			while (scanner.hasNextLine())

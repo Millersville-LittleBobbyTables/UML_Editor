@@ -70,6 +70,8 @@ public class SumlWorkspace
 	{
 		pane.setMinSize(width, height);
 		pane.setMaxSize(width, height);
+		container.width = width;
+		container.height = height;
 	}
 	
 	/**
@@ -79,6 +81,7 @@ public class SumlWorkspace
 	{
 		pane.setMinWidth(width);
 		pane.setMaxWidth(width);
+		container.width = width;
 	}
 	
 	/**
@@ -88,6 +91,7 @@ public class SumlWorkspace
 	{
 		pane.setMinHeight(height);
 		pane.setMaxHeight(height);
+		container.height = height;
 	}
 
 	/**
@@ -136,5 +140,7 @@ public class SumlWorkspace
 	public void create(String context)
 	{
 		container.create(context);
+		setWidth(container.width);
+		setHeight(container.height);
 	}
 }
