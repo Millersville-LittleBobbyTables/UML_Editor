@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import uml_elements.ArrowContainer;
@@ -73,6 +74,8 @@ public class ArrowContainerTest
 		}
 		assertTrue (polyCount == 1);
 		assertTrue (p.getStrokeDashArray().size() == 2);
+		assertTrue (p.getPoints().size() == 6);
+		assertTrue (p.getFill() == Color.TRANSPARENT);
 	}
 	
 	@Test
@@ -113,6 +116,8 @@ public class ArrowContainerTest
 		}
 		assertTrue (polyCount == 1);
 		assertTrue (p.getStrokeDashArray().size() == 2);
+		assertTrue (p.getPoints().size() == 6);
+		assertTrue (p.getFill() == Color.TRANSPARENT);
 	}
 	
 	@Test
@@ -153,6 +158,8 @@ public class ArrowContainerTest
 		}
 		assertTrue (polyCount == 1);
 		assertTrue (p.getStrokeDashArray().size() == 0);
+		assertTrue (p.getPoints().size() == 6);
+		assertTrue (p.getFill() == Color.TRANSPARENT);
 	}
 	
 	@Test
@@ -193,6 +200,92 @@ public class ArrowContainerTest
 		}
 		assertTrue (polyCount == 1);
 		assertTrue (p.getStrokeDashArray().size() == 0);
+		assertTrue (p.getPoints().size() == 6);
+		assertTrue (p.getFill() == Color.TRANSPARENT);
+	}
+	
+	@Test
+	public void testAddAggregationForSolidLine()
+	{
+		arrContainer.add("Aggregation", 40, 40);
+		
+		Line l = null;
+		int lineCount = 0;
+		ObservableList<Node> children = layout.getChildren(); 
+		for (int i = 0; i < children.size(); ++i)
+		{
+			if (children.get(i) instanceof Line)
+			{
+				l = (Line) children.get(i);
+				++lineCount;
+			}
+		}
+		assertTrue (lineCount == 1);
+		assertTrue (l.getStrokeDashArray().size() == 0);
+	}
+	
+	@Test
+	public void testAddAggregationForTransparentDiamond()
+	{
+		arrContainer.add("Aggregation", 40, 40);
+		
+		Polygon p = null;
+		int polyCount = 0;
+		ObservableList<Node> children = layout.getChildren(); 
+		for (int i = 0; i < children.size(); ++i)
+		{
+			if (children.get(i) instanceof Polygon)
+			{
+				p = (Polygon) children.get(i);
+				++polyCount;
+			}
+		}
+		assertTrue (polyCount == 1);
+		assertTrue (p.getStrokeDashArray().size() == 0);
+		assertTrue (p.getPoints().size() == 8);
+		assertTrue (p.getFill() == Color.TRANSPARENT);
+	}
+	
+	@Test
+	public void testAddCompositionForSolidLine()
+	{
+		arrContainer.add("Composition", 40, 40);
+		
+		Line l = null;
+		int lineCount = 0;
+		ObservableList<Node> children = layout.getChildren(); 
+		for (int i = 0; i < children.size(); ++i)
+		{
+			if (children.get(i) instanceof Line)
+			{
+				l = (Line) children.get(i);
+				++lineCount;
+			}
+		}
+		assertTrue (lineCount == 1);
+		assertTrue (l.getStrokeDashArray().size() == 0);
+	}
+	
+	@Test
+	public void testAddCompositionForBlackDiamond()
+	{
+		arrContainer.add("Composition", 40, 40);
+		
+		Polygon p = null;
+		int polyCount = 0;
+		ObservableList<Node> children = layout.getChildren(); 
+		for (int i = 0; i < children.size(); ++i)
+		{
+			if (children.get(i) instanceof Polygon)
+			{
+				p = (Polygon) children.get(i);
+				++polyCount;
+			}
+		}
+		assertTrue (polyCount == 1);
+		assertTrue (p.getStrokeDashArray().size() == 0);
+		assertTrue (p.getPoints().size() == 8);
+		assertTrue (p.getFill() == Color.BLACK);
 	}
 	
 	@Test
