@@ -15,7 +15,7 @@ import interface_elements.SumlToolBar.EditMode;
 public class ArrowContainer
 {
 	public static final String[] ArrowType = {"Association", "Dependency",
-        "Generalization", "Realization"};
+        "Generalization", "Realization","Aggregation","Composition"};
 
 	private static final double xLength = 50;
 	private Vector<Arrow> arrows = new Vector<Arrow>();
@@ -51,19 +51,27 @@ public class ArrowContainer
         Arrow arrow;
         if (index == 0)
         {
-        	arrow = new Arrow(arrowType, arrows.size(), false, true, true, layout);
+        	arrow = new Arrow(arrowType, arrows.size(), false, true, true, false, false, layout);
         }
         else if (index == 1)
         {
-            arrow = new Arrow(arrowType, arrows.size(), true,  true, true, layout);  
+            arrow = new Arrow(arrowType, arrows.size(), true,  true, true, false, false, layout);  
         }
         else if (index == 2)
         {
-            arrow = new Arrow(arrowType, arrows.size(), false, true, false, layout);
+            arrow = new Arrow(arrowType, arrows.size(), false, true, false,  false, false, layout);
+        }
+        else if (index == 3)
+        {
+            arrow = new Arrow(arrowType, arrows.size(), true,  true, false, false, false, layout);
+        }
+        else if (index == 4)
+        {
+            arrow = new Arrow(arrowType, arrows.size(), false,  true, false, true, false, layout);
         }
         else
         {
-            arrow = new Arrow(arrowType, arrows.size(), true,  true, false, layout);
+            arrow = new Arrow(arrowType, arrows.size(), false,  true, false, true, true, layout);
         }
         arrow.setPosition(beginX, beginY, endX, endY);
 		arrows.add(arrow);
@@ -149,6 +157,8 @@ public class ArrowContainer
 	    private boolean isDash          = false;
 	    private boolean isNotClosed     = false;
 	    private boolean isTriVisible    = false;
+	    private boolean isDiamond       = false;
+	    private boolean isFilled        = false;
 
 	    public Line line = new Line();
 	    public Polygon triangle = new Polygon();
@@ -165,13 +175,15 @@ public class ArrowContainer
 	    *   boolean to make the arrow open like this (--->).
 	    */
 	    Arrow(String arrowType, int index, boolean isDash, boolean isTriVisible, 
-	        boolean isNotClosed, Pane layout)
+	        boolean isNotClosed,boolean isDiamond, boolean isFilled, Pane layout)
 	    {
 	    	this.arrowType = arrowType;
 	        this.index = index;
 	        this.isDash = isDash;
 	        this.isTriVisible = isTriVisible;
 	        this.isNotClosed = isNotClosed;
+	        this.isDiamond = isDiamond;
+	        this.isFilled = isFilled;
 	        this.layout = layout;
 	        init();
 	    }
@@ -261,12 +273,29 @@ public class ArrowContainer
 	        double newX2 = vectorY + newOrgX;
 	        double newY2 = -vectorX + newOrgY;
 
-	        triangle.getPoints().setAll(new Double[]
+	        if (!isDiamond)
 	        {
-	            endX,  endY,
-	            newX1, newY1,
-	            newX2, newY2
-	        });
+		        triangle.getPoints().setAll(new Double[]
+		        {
+		            endX,  endY,
+		            newX1, newY1,
+		            newX2, newY2
+		        });
+	        }
+	        else
+	        {
+		        newLength = length - 2 * triangleHeight;
+		        lengthFactor = newLength / length;
+	        	newOrgX = (lengthFactor * (endX - orgX)) + orgX;
+		        newOrgY = (lengthFactor * (endY - orgY)) + orgY;
+		        triangle.getPoints().setAll(new Double[]
+		        {
+		            endX,  endY,
+		            newX1, newY1,
+		            newOrgX, newOrgY,
+		            newX2, newY2
+		        });
+	        }
 	    }
 	    
 	    /**
@@ -309,7 +338,14 @@ public class ArrowContainer
 	    private void init()
 	    {
 	        updateTriangle();
-	        triangle.setFill(Color.TRANSPARENT);
+	        if (isFilled)
+	        {
+	        	triangle.setFill(Color.BLACK);
+	        }
+	        else
+	        {
+	        	triangle.setFill(Color.TRANSPARENT);
+	        }
 	        if (isNotClosed)
 	        {
 	            triangle.getStrokeDashArray()
